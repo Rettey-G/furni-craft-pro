@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Furniture Selection - FurniCraft Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="common-nav.css">
+    <link rel="stylesheet" href="selection-v2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <!-- Common navigation will be inserted here by common-nav.js -->
+    </header>
+
+    <main class="container">
+        <h1 class="page-title"><i class="fas fa-chair"></i> Furniture Selection</h1>
+        
+        <div class="selection-progress">
+            <div class="progress-step active" data-step="location">
+                <div class="step-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="step-label">Location</div>
+            </div>
+            <div class="progress-step" data-step="furniture">
+                <div class="step-icon"><i class="fas fa-couch"></i></div>
+                <div class="step-label">Furniture Type</div>
+            </div>
+            <div class="progress-step" data-step="size">
+                <div class="step-icon"><i class="fas fa-ruler-combined"></i></div>
+                <div class="step-label">Size</div>
+            </div>
+            <div class="progress-step" data-step="materials">
+                <div class="step-icon"><i class="fas fa-palette"></i></div>
+                <div class="step-label">Materials</div>
+            </div>
+            <div class="progress-step" data-step="summary">
+                <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="step-label">Summary</div>
+            </div>
+        </div>
+        
+        <!-- Location Selection Section -->
+        <section id="location-section" class="selection-section active">
+            <h2 class="section-title">Choose Location</h2>
+            <p class="section-description">Select the room where you'll place your furniture.</p>
+            
+            <div class="location-grid">
+                <div class="location-card" data-location="living-room">
+                    <div class="card-image">
+                        <img src="assets/locations/living-room.jpg" alt="Living Room">
+                    </div>
+                    <div class="card-content">
+                        <h3>Living Room</h3>
+                        <p>Comfortable and stylish furniture for your main living space.</p>
+                    </div>
+                    <div class="card-overlay">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                
+                <div class="location-card" data-location="bedroom">
+                    <div class="card-image">
+                        <img src="assets/locations/bedroom.jpg" alt="Bedroom">
+                    </div>
+                    <div class="card-content">
+                        <h3>Bedroom</h3>
+                        <p>Relaxing and functional furniture for a good night's sleep.</p>
+                    </div>
+                    <div class="card-overlay">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                
+                <div class="location-card" data-location="dining-room">
+                    <div class="card-image">
+                        <img src="assets/locations/dining-room.jpg" alt="Dining Room">
+                    </div>
+                    <div class="card-content">
+                        <h3>Dining Room</h3>
+                        <p>Elegant dining sets for memorable meals with family and friends.</p>
+                    </div>
+                    <div class="card-overlay">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                
+                <div class="location-card" data-location="office">
+                    <div class="card-image">
+                        <img src="assets/locations/office.jpg" alt="Office">
+                    </div>
+                    <div class="card-content">
+                        <h3>Office</h3>
+                        <p>Productive and ergonomic furniture for your work space.</p>
+                    </div>
+                    <div class="card-overlay">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                
+                <div class="location-card" data-location="kitchen">
+                    <div class="card-image">
+                        <img src="assets/locations/kitchen.jpg" alt="Kitchen">
+                    </div>
+                    <div class="card-content">
+                        <h3>Kitchen</h3>
+                        <p>Functional and stylish furniture for your cooking space.</p>
+                    </div>
+                    <div class="card-overlay">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                
+                <div class="location-card" data-location="outdoor">
+                    <div class="card-image">
+                        <img src="assets/locations/outdoor.jpg" alt="Outdoor">
+                    </div>
+                    <div class="card-content">
+                        <h3>Outdoor</h3>
+                        <p>Weather-resistant furniture for your garden, patio or balcony.</p>
+                    </div>
+                    <div class="card-overlay">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-actions">
+                <button class="btn btn-next" id="next-to-furniture" disabled>
+                    Next: Choose Furniture <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Furniture Type Selection Section -->
+        <section id="furniture-section" class="selection-section">
+            <h2 class="section-title">Choose Furniture Type</h2>
+            <p class="section-description">Select the type of furniture you want to add to your <span id="selected-location-text">room</span>.</p>
+            
+            <div class="furniture-grid" id="furniture-grid">
+                <!-- Furniture options will be loaded dynamically based on location -->
+            </div>
+            
+            <div class="section-actions">
+                <button class="btn btn-back" id="back-to-location">
+                    <i class="fas fa-arrow-left"></i> Back: Location
+                </button>
+                <button class="btn btn-next" id="next-to-size" disabled>
+                    Next: Choose Size <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Size Selection Section -->
+        <section id="size-section" class="selection-section">
+            <h2 class="section-title">Choose Size</h2>
+            <p class="section-description">Select the size for your <span id="selected-furniture-text">furniture</span>.</p>
+            
+            <div class="size-options" id="size-options">
+                <!-- Size options will be loaded dynamically based on furniture type -->
+            </div>
+            
+            <div class="custom-size">
+                <h3>Custom Dimensions</h3>
+                <div class="dimension-inputs">
+                    <div class="dimension-input">
+                        <label for="custom-width">Width (cm)</label>
+                        <input type="number" id="custom-width" min="10" max="500" placeholder="Width">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="custom-depth">Depth (cm)</label>
+                        <input type="number" id="custom-depth" min="10" max="500" placeholder="Depth">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="custom-height">Height (cm)</label>
+                        <input type="number" id="custom-height" min="10" max="500" placeholder="Height">
+                    </div>
+                </div>
+                <button class="btn btn-apply" id="apply-custom-size">Apply Custom Size</button>
+            </div>
+            
+            <div class="section-actions">
+                <button class="btn btn-back" id="back-to-furniture">
+                    <i class="fas fa-arrow-left"></i> Back: Furniture Type
+                </button>
+                <button class="btn btn-next" id="next-to-materials" disabled>
+                    Next: Choose Materials <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Materials Selection Section -->
+        <section id="materials-section" class="selection-section">
+            <h2 class="section-title">Choose Materials</h2>
+            <p class="section-description">Select materials and finishes for your furniture.</p>
+            
+            <div class="materials-container">
+                <div class="material-category">
+                    <h3>Primary Material</h3>
+                    <div class="material-options" id="primary-materials">
+                        <!-- Primary material options will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>Finish</h3>
+                    <div class="material-options" id="finish-options">
+                        <!-- Finish options will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>Hardware</h3>
+                    <div class="material-options" id="hardware-options">
+                        <!-- Hardware options will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-actions">
+                <button class="btn btn-back" id="back-to-size">
+                    <i class="fas fa-arrow-left"></i> Back: Size
+                </button>
+                <button class="btn btn-next" id="next-to-summary" disabled>
+                    Next: Summary <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Summary Section -->
+        <section id="summary-section" class="selection-section">
+            <h2 class="section-title">Summary</h2>
+            <p class="section-description">Review your furniture selection.</p>
+            
+            <div class="summary-container">
+                <div class="summary-preview">
+                    <div id="furniture-preview" class="furniture-preview">
+                        <!-- 3D preview will be loaded here -->
+                    </div>
+                    <div class="preview-controls">
+                        <button class="control-button" id="rotate-left"><i class="fas fa-undo"></i></button>
+                        <button class="control-button" id="rotate-right"><i class="fas fa-redo"></i></button>
+                        <button class="control-button" id="zoom-in"><i class="fas fa-search-plus"></i></button>
+                        <button class="control-button" id="zoom-out"><i class="fas fa-search-minus"></i></button>
+                        <button class="control-button" id="reset-view"><i class="fas fa-home"></i></button>
+                    </div>
+                </div>
+                
+                <div class="summary-details">
+                    <h3>Your Selection</h3>
+                    <div class="summary-item">
+                        <div class="summary-label">Location:</div>
+                        <div class="summary-value" id="summary-location">Living Room</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Furniture Type:</div>
+                        <div class="summary-value" id="summary-furniture">Sofa</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Size:</div>
+                        <div class="summary-value" id="summary-size">Large (220 x 90 x 85 cm)</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Primary Material:</div>
+                        <div class="summary-value" id="summary-material">Solid Wood</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Finish:</div>
+                        <div class="summary-value" id="summary-finish">Natural Oak</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Hardware:</div>
+                        <div class="summary-value" id="summary-hardware">Brushed Nickel</div>
+                    </div>
+                    
+                    <h3>Materials Required</h3>
+                    <div id="materials-list" class="materials-list">
+                        <!-- Materials list will be generated dynamically -->
+                    </div>
+                    
+                    <div class="price-estimate">
+                        <div class="price-label">Estimated Price:</div>
+                        <div class="price-value" id="price-estimate">4,999 MVR</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-actions">
+                <button class="btn btn-back" id="back-to-materials">
+                    <i class="fas fa-arrow-left"></i> Back: Materials
+                </button>
+                <button class="btn btn-primary" id="add-to-room">
+                    <i class="fas fa-plus-circle"></i> Add to Room
+                </button>
+                <button class="btn btn-secondary" id="view-in-3d">
+                    <i class="fas fa-cube"></i> View in 3D Room
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="common-nav.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="selection-v2.js"></script>
+</body>
+</html>

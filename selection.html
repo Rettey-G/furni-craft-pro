@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Furniture Selection</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="improved-nav.css">
+  <link rel="stylesheet" href="selection.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <header>
+    <!-- Common navigation will be inserted here by common-nav.js -->
+  </header>
+
+  <div class="container">
+    <h1>Furniture Builder</h1>
+
+    <!-- Location Selection -->
+    <section id="location-section">
+      <h2>Choose Location</h2>
+      <div class="location-grid">
+        <div class="location-card" data-location="office">
+          <img src="assets/locations/office.jpg" alt="Office">
+          <p>Office</p>
+        </div>
+        <div class="location-card" data-location="bedroom">
+          <img src="assets/locations/bedroom.jpg" alt="Bedroom">
+          <p>Bedroom</p>
+        </div>
+        <div class="location-card" data-location="kitchen">
+          <img src="assets/locations/kitchen.jpg" alt="Kitchen">
+          <p>Kitchen</p>
+        </div>
+        <div class="location-card" data-location="living_room">
+          <img src="assets/locations/living_room.jpg" alt="Living Room">
+          <p>Living Room</p>
+        </div>
+        <div class="location-card" data-location="restaurant">
+          <img src="assets/locations/restaurant.jpg" alt="Restaurant">
+          <p>Restaurant</p>
+        </div>
+        <div class="location-card" data-location="lobby">
+          <img src="assets/locations/lobby.jpg" alt="Lobby">
+          <p>Lobby</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Furniture Selection -->
+    <section id="furniture-section" class="hidden">
+      <h2>Choose Furniture</h2>
+      <div class="furniture-grid"></div>
+    </section>
+
+    <!-- Size Selection -->
+    <section id="size-section" class="hidden">
+      <h2>Choose Size</h2>
+      <p class="size-description">Select the size that best fits your space requirements:</p>
+      <div class="size-grid"></div>
+    </section>
+
+    <!-- Items Display -->
+    <section id="items-section" class="hidden">
+      <h2>Materials Required</h2>
+      <div class="material-info">
+        <h3>Material Requirements</h3>
+        <p>Below is a detailed list of all materials needed for your selected furniture:</p>
+      </div>
+      <div class="items-grid"></div>
+      <div class="action-buttons">
+        <button id="calculate-wood">Calculate Wood Sheets</button>
+        <button id="generate-quotation">Generate Quotation</button>
+        <button id="view-3d-model">View in 3D</button>
+        <button id="back-to-locations">Start Over</button>
+      </div>
+    </section>
+
+    <!-- Selected Items Display -->
+    <section id="selected-items-section" class="hidden">
+      <h2>Selected Items</h2>
+      <div class="selected-items-grid"></div>
+    </section>
+  </div>
+
+  <script src="improved-nav.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

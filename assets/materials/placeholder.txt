@@ -1,0 +1,23 @@
+This file is a placeholder. In a real implementation, this directory would contain actual images of materials such as:
+
+- wood-sheet.jpg
+- screws.jpg
+- wood-glue.jpg
+- table-legs.jpg
+- fabric.jpg
+- foam.jpg
+- bed-slats.jpg
+- hinges.jpg
+- handles.jpg
+- shelf-supports.jpg
+- cable-grommets.jpg
+- wood-finish.jpg
+- sandpaper.jpg
+- oak-sheet.jpg
+- pine-sheet.jpg
+- maple-sheet.jpg
+- walnut-sheet.jpg
+- saw-blade.jpg
+- drill-bits.jpg
+
+For now, we'll use CSS-based placeholders in our implementation.

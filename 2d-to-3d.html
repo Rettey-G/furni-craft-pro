@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D to 3D Converter - FurniCraft Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="common-nav.css">
+    <link rel="stylesheet" href="3d-viewer.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    <style>
+        .converter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .converter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .upload-section {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .preview-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background-color: #ecf0f1;
+        }
+        
+        .upload-area.active {
+            border-color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 18px;
+            color: #7f8c8d;
+        }
+        
+        .upload-text strong {
+            color: #2c3e50;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .materials-list {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .canvas-container {
+            height: 400px;
+            position: relative;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .converter-info {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            padding: 0 20px;
+            text-align: center;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        #file-info {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #3d-viewer {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .dimensions-form {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .material-card {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Common navigation will be inserted here by common-nav.js -->
+    </header>
+    
+    <div class="page-title">
+        <h2>2D to 3D Converter</h2>
+    </div>
+    
+    <div class="converter-info">
+        <p>Convert your 2D furniture designs into interactive 3D models with our advanced converter tool. Upload sketches, floor plans, or design images to visualize them in 3D space.</p>
+    </div>
+    
+    <div class="converter-container">
+        <div class="converter-grid">
+            <div class="upload-section">
+                <h3>Upload Your 2D Design</h3>
+                <p>Upload a floor plan or furniture sketch to convert it to a 3D model.</p>
+                
+                <div id="upload-area" class="upload-area">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">
+                        <strong>Click to upload</strong> or drag and drop<br>
+                        Supported formats: JPG, PNG, SVG
+                    </div>
+                    <input type="file" id="file-input" class="file-input" accept=".jpg,.jpeg,.png,.svg">
+                </div>
+                
+                <div id="file-info" style="display: none; margin-top: 15px;">
+                    <p><strong>Selected file:</strong> <span id="file-name"></span></p>
+                    <button id="remove-file" class="btn btn-small">Remove file</button>
+                </div>
+                
+                <div class="dimensions-form" id="dimensions-form">
+                    <h3>Specify Dimensions</h3>
+                    <div class="form-group">
+                        <label for="furniture-type">Furniture Type:</label>
+                        <select id="furniture-type">
+                            <option value="">Select furniture type</option>
+                            <option value="table">Table</option>
+                            <option value="chair">Chair</option>
+                            <option value="sofa">Sofa</option>
+                            <option value="bed">Bed</option>
+                            <option value="wardrobe">Wardrobe</option>
+                            <option value="cabinet">Cabinet</option>
+                            <option value="bookshelf">Bookshelf</option>
+                            <option value="desk">Desk</option>
+                            <option value="file_cabinet">File Cabinet</option>
+                            <option value="shoe_rack">Shoe Rack</option>
+                            <option value="side_drawer">Side Drawer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="width">Width (meters):</label>
+                        <input type="number" id="width" step="0.1" min="0.1" max="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="height">Height (meters):</label>
+                        <input type="number" id="height" step="0.1" min="0.1" max="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="depth">Depth (meters):</label>
+                        <input type="number" id="depth" step="0.1" min="0.1" max="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="material">Primary Material:</label>
+                        <select id="material">
+                            <option value="oak">Oak</option>
+                            <option value="pine">Pine</option>
+                            <option value="maple">Maple</option>
+                            <option value="walnut">Walnut</option>
+                            <option value="cherry">Cherry</option>
+                            <option value="mahogany">Mahogany</option>
+                        </select>
+                    </div>
+                    
+                    <button id="generate-3d" class="button primary-button">Generate 3D Model</button>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h3>Preview</h3>
+                <img id="preview-image" class="preview-image" alt="Design Preview">
+                
+                <div id="canvas-container" class="canvas-container">
+                    <div id="loading">Loading 3D Model...</div>
+                    <canvas id="3d-viewer"></canvas>
+                    <div class="controls-info">
+                        <p>Left click + drag: Rotate | Right click + drag: Pan | Scroll: Zoom</p>
+                    </div>
+                </div>
+                
+                <div id="materials-list" class="materials-list">
+                    <h3>Materials Required</h3>
+                    <div id="materials-container"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <a href="index.html" class="button back-button">Back to Home</a>
+            <a href="shop.html" class="button secondary-button">Shop for Materials</a>
+        </div>
+    </div>
+    
+    <script src="database.js"></script>
+    <script src="common-nav.js"></script>
+    <script>
+        // Variables for the 2D to 3D page only
+        let uploadScene, uploadCamera, uploadRenderer, uploadControls;
+        let furnitureModel = null;
+        
+        // DOM Elements
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const previewImage = document.getElementById('preview-image');
+        const dimensionsForm = document.getElementById('dimensions-form');
+        const generateButton = document.getElementById('generate-button');
+        const materialsSection = document.getElementById('materials-section');
+        const materialsList = document.getElementById('materials-list');
+        const canvasContainer = document.getElementById('canvas-container');
+        const loading = document.getElementById('loading');
+        const removeFileButton = document.getElementById('remove-file');
+        const fileName = document.getElementById('file-name');
+        const fileInfo = document.getElementById('file-info');
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fix variable reference for generate button
+            const generateButton = document.getElementById('generate-3d');
+            
+            // Initialize drag and drop functionality
+            initDragAndDrop();
+            
+            // Upload area click event
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Remove file button click event
+            removeFileButton.addEventListener('click', function() {
+                fileInput.value = '';
+                previewImage.style.display = 'none';
+                dimensionsForm.style.display = 'none';
+                fileInfo.style.display = 'none';
+                uploadArea.classList.remove('active');
+                materialsSection.style.display = 'none';
+                canvasContainer.style.display = 'none';
+            });
+            
+            // File input change event
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    
+                    // Check if file is an image
+                    if (!file.type.match('image.*')) {
+                        alert('Please upload an image file (JPG, PNG, SVG).');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+                        dimensionsForm.style.display = 'block';
+                        uploadArea.classList.add('active');
+                        
+                        // Set default values based on image dimensions
+                        const img = new Image();
+                        img.onload = function() {
+                            const aspectRatio = this.width / this.height;
+                            document.getElementById('width').value = (aspectRatio > 1) ? 1.2 : 0.8;
+                            document.getElementById('depth').value = (aspectRatio > 1) ? 0.8 : 0.6;
+                            document.getElementById('height').value = 0.75;
+                            
+                            // Auto-select furniture type based on aspect ratio
+                            const furnitureType = document.getElementById('furniture-type');
+                            if (aspectRatio > 1.5) {
+                                furnitureType.value = 'table';
+                            } else if (aspectRatio < 0.7) {
+                                furnitureType.value = 'cabinet';
+                            } else {
+                                furnitureType.value = 'desk';
+                            }
+                        };
+                        img.src = event.target.result;
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Drag and drop events
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.classList.add('active');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.classList.remove('active');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    
+                    // Check if file is an image
+                    if (!validateFile(file)) {
+                        alert('Please upload an image file (JPG, PNG, SVG).');
+                        return;
+                    }
+                    
+                    try {
+                        // Create a new DataTransfer object
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        
+                        // Update the file input
+                        fileInput.files = dataTransfer.files;
+                    } catch (error) {
+                        console.error('DataTransfer error:', error);
+                        // Fallback for browsers that don't support DataTransfer
+                        // Just continue with the file processing
+                    }
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+                        dimensionsForm.style.display = 'block';
+                        uploadArea.classList.add('active');
+                        document.getElementById('file-name').textContent = file.name;
+                        document.getElementById('file-info').style.display = 'block';
+                        
+                        // Set default values based on image dimensions
+                        const img = new Image();
+                        img.onload = function() {
+                            const aspectRatio = this.width / this.height;
+                            document.getElementById('width').value = (aspectRatio > 1) ? 1.2 : 0.8;
+                            document.getElementById('depth').value = (aspectRatio > 1) ? 0.8 : 0.6;
+                            document.getElementById('height').value = 0.75;
+                            
+                            // Auto-select furniture type based on aspect ratio
+                            const furnitureType = document.getElementById('furniture-type');
+                            if (aspectRatio > 1.5) {
+                                furnitureType.value = 'table';
+                            } else if (aspectRatio < 0.7) {
+                                furnitureType.value = 'cabinet';
+                            } else {
+                                furnitureType.value = 'desk';
+                            }
+                        };
+                        img.src = event.target.result;
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Fix for Firefox and other browsers
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                document.body.addEventListener(eventName, preventDefaults, false);
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Add file validation
+            function validateFile(file) {
+                // Check file type
+                const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Please upload a valid image file (JPG, PNG, SVG).');
+                    return false;
+                }
+                
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size should be less than 5MB.');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // Generate 3D model button click
+            generateButton.addEventListener('click', function() {
+                const furnitureType = document.getElementById('furniture-type').value;
+                const width = parseFloat(document.getElementById('width').value);
+                const height = parseFloat(document.getElementById('height').value);
+                const depth = parseFloat(document.getElementById('depth').value);
+                const material = document.getElementById('material').value;
+                
+                // Show file name in console for debugging
+                console.log('Processing file:', fileName.textContent);
+                
+                if (!furnitureType || !width || !height || !depth) {
+                    alert('Please fill in all dimensions and select a furniture type.');
+                    return;
+                }
+                
+                // Show 3D viewer
+                canvasContainer.style.display = 'block';
+                
+                // Initialize 3D viewer if not already initialized
+                if (!scene) {
+                    initViewer();
+                }
+                
+                // Generate 3D model
+                generateModel(furnitureType, width, height, depth, material);
+                
+                // Show materials list
+                materialsList.style.display = 'block';
+                
+                // Generate materials list
+                generateMaterialsList(furnitureType, width, height, depth);
+            });
+        });
+        
+        // Initialize 3D viewer
+        function initViewer() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+            
+            // Create camera
+            const canvasContainer = document.querySelector('.canvas-container');
+            const aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
+            camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+            camera.position.set(0, 1.5, 3);
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: document.getElementById('3d-viewer'),
+                antialias: true 
+            });
+            renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+            renderer.shadowMap.enabled = true;
+            
+            // Add orbit controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.25;
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 7.5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+            
+            // Add floor
+            const floorGeometry = new THREE.PlaneGeometry(10, 10);
+            const floorMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xcccccc,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -0.5;
+            floor.receiveShadow = true;
+            scene.add(floor);
+            
+            // Add grid helper
+            const gridHelper = new THREE.GridHelper(10, 10, 0x888888, 0x888888);
+            gridHelper.position.y = -0.49;
+            scene.add(gridHelper);
+            
+            // Start animation loop
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize);
+        }
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            if (controls) controls.update();
+            if (renderer && scene && camera) renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        function onWindowResize() {
+            if (!camera || !renderer) return;
+            
+            const canvasContainer = document.querySelector('.canvas-container');
+            camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+        }
+        
+        // Generate 3D model
+        function generateModel(furnitureType, width, height, depth, material) {
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
+            
+            // Remove existing model if any
+            if (furnitureModel) {
+                scene.remove(furnitureModel);
+            }
+            
+            // Create model based on furniture type
+            const dimensions = {
+                width: width,
+                height: height,
+                depth: depth
+            };
+            
+            // Use the existing createBasicFurnitureModel function from 3d-viewer.js
+            furnitureModel = createBasicFurnitureModel(furnitureType, 'custom', dimensions, material);
+            
+            // Add model to scene
+            scene.add(furnitureModel);
+            
+            // Center camera on model
+            centerCameraOnModel(furnitureModel);
+            
+            // Hide loading indicator
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        // Center camera on model
+        function centerCameraOnModel(model) {
+            if (!model) return;
+            
+            // Get the bounding box of the model
+            const boundingBox = new THREE.Box3().setFromObject(model);
+            const center = new THREE.Vector3();
+            boundingBox.getCenter(center);
+            
+            // Set the controls target to the center of the model
+            controls.target.copy(center);
+            
+            // Calculate the size of the bounding box
+            const size = new THREE.Vector3();
+            boundingBox.getSize(size);
+            
+            // Calculate the distance based on the size of the model
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const fov = camera.fov * (Math.PI / 180);
+            let distance = (maxDim / 2) / Math.tan(fov / 2);
+            
+            // Add a bit of padding
+            distance *= 1.5;
+            
+            // Calculate the camera position
+            const direction = new THREE.Vector3();
+            camera.getWorldDirection(direction);
+            direction.multiplyScalar(-distance);
+            
+            // Set camera position
+            camera.position.copy(center).add(direction);
+            camera.lookAt(center);
+            
+            // Update controls
+            controls.update();
+        }
+        
+        // Generate materials list
+        function generateMaterialsList(furnitureType, width, height, depth) {
+            const materialsContainer = document.getElementById('materials-container');
+            materialsContainer.innerHTML = '';
+            
+            // Calculate materials based on furniture type and dimensions
+            const materials = calculateMaterials(furnitureType, width, height, depth);
+            
+            // Create material cards
+            materials.forEach(material => {
+                const materialCard = document.createElement('div');
+                materialCard.className = 'material-card';
+                
+                materialCard.innerHTML = `
+                    <img src="${material.image}" alt="${material.name}" class="material-image">
+                    <div class="material-info">
+                        <h4>${material.name}</h4>
+                        <p>${material.description}</p>
+                    </div>
+                    <div class="material-quantity">
+                        ${material.quantity} ${material.unit}
+                    </div>
+                `;
+                
+                materialsContainer.appendChild(materialCard);
+            });
+        }
+        
+        // Calculate materials
+        function calculateMaterials(furnitureType, width, height, depth) {
+            const materials = [];
+            const area = width * depth;
+            const volume = width * height * depth;
+            
+            // Common materials
+            materials.push({
+                name: 'Wood Sheets',
+                description: 'Main structural material',
+                quantity: Math.ceil(area * 2),
+                unit: 'sq.m',
+                image: 'assets/materials/wood-sheet.jpg'
+            });
+            
+            materials.push({
+                name: 'Screws',
+                description: 'For assembly',
+                quantity: Math.ceil(volume * 20),
+                unit: 'pcs',
+                image: 'assets/materials/screws.jpg'
+            });
+            
+            materials.push({
+                name: 'Wood Glue',
+                description: 'For joints',
+                quantity: Math.ceil(area / 2),
+                unit: 'bottles',
+                image: 'assets/materials/wood-glue.jpg'
+            });
+            
+            // Furniture-specific materials
+            switch(furnitureType) {
+                case 'table':
+                    materials.push({
+                        name: 'Table Legs',
+                        description: 'Support structure',
+                        quantity: 4,
+                        unit: 'pcs',
+                        image: 'assets/materials/table-legs.jpg'
+                    });
+                    break;
+                    
+                case 'chair':
+                    materials.push({
+                        name: 'Upholstery Fabric',
+                        description: 'For seat cushion',
+                        quantity: Math.ceil(width * depth * 1.5),
+                        unit: 'sq.m',
+                        image: 'assets/materials/fabric.jpg'
+                    });
+                    materials.push({
+                        name: 'Foam Padding',
+                        description: 'For seat comfort',
+                        quantity: Math.ceil(width * depth),
+                        unit: 'sq.m',
+                        image: 'assets/materials/foam.jpg'
+                    });
+                    break;
+                    
+                case 'sofa':
+                    materials.push({
+                        name: 'Upholstery Fabric',
+                        description: 'For cushions and backing',
+                        quantity: Math.ceil(area * 3),
+                        unit: 'sq.m',
+                        image: 'assets/materials/fabric.jpg'
+                    });
+                    materials.push({
+                        name: 'Foam Padding',
+                        description: 'For cushions',
+                        quantity: Math.ceil(area * 2),
+                        unit: 'sq.m',
+                        image: 'assets/materials/foam.jpg'
+                    });
+                    materials.push({
+                        name: 'Springs',
+                        description: 'For seating support',
+                        quantity: Math.ceil(width * 4),
+                        unit: 'pcs',
+                        image: 'assets/materials/springs.jpg'
+                    });
+                    break;
+                    
+                case 'bed':
+                    materials.push({
+                        name: 'Bed Slats',
+                        description: 'For mattress support',
+                        quantity: Math.ceil(width / 0.1),
+                        unit: 'pcs',
+                        image: 'assets/materials/bed-slats.jpg'
+                    });
+                    break;
+                    
+                case 'wardrobe':
+                case 'cabinet':
+                    materials.push({
+                        name: 'Hinges',
+                        description: 'For doors',
+                        quantity: Math.ceil(height / 0.5) * 2,
+                        unit: 'pcs',
+                        image: 'assets/materials/hinges.jpg'
+                    });
+                    materials.push({
+                        name: 'Handles',
+                        description: 'For doors and drawers',
+                        quantity: Math.ceil(height / 0.5),
+                        unit: 'pcs',
+                        image: 'assets/materials/handles.jpg'
+                    });
+                    break;
+                    
+                case 'bookshelf':
+                    materials.push({
+                        name: 'Shelf Supports',
+                        description: 'For adjustable shelves',
+                        quantity: Math.ceil(height / 0.3) * 4,
+                        unit: 'pcs',
+                        image: 'assets/materials/shelf-supports.jpg'
+                    });
+                    break;
+                    
+                case 'desk':
+                    materials.push({
+                        name: 'Cable Grommets',
+                        description: 'For cable management',
+                        quantity: 2,
+                        unit: 'pcs',
+                        image: 'assets/materials/cable-grommets.jpg'
+                    });
+                    break;
+            }
+            
+            // Finishing materials
+            materials.push({
+                name: 'Wood Finish',
+                description: 'Protective coating',
+                quantity: Math.ceil(area * 0.25),
+                unit: 'liters',
+                image: 'assets/materials/wood-finish.jpg'
+            });
+            
+            materials.push({
+                name: 'Sandpaper',
+                description: 'For smooth finish',
+                quantity: Math.ceil(area / 2),
+                unit: 'sheets',
+                image: 'assets/materials/sandpaper.jpg'
+            });
+            
+            return materials;
+        }
+    </script>
+</body>
+</html>

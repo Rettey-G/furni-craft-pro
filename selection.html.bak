@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Furniture Selection</title>
+  <link rel="stylesheet" href="selection.css">
+  <style>
+    .location-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .location-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .location-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    
+    .location-card p {
+      padding: 15px;
+      margin: 0;
+      font-weight: 600;
+      text-align: center;
+      color: #333;
+    }
+    
+    .location-card.selected {
+      border: 3px solid #3498db;
+    }
+    
+    .location-card.selected::after {
+      content: "\f00c";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #3498db;
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    
+    .furniture-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .furniture-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .furniture-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    
+    .furniture-card .card-content {
+      padding: 15px;
+    }
+    
+    .furniture-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    .furniture-card p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .furniture-card.selected {
+      border: 3px solid #3498db;
+    }
+    
+    .size-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .size-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .size-card h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    
+    .size-card p {
+      margin: 0;
+      color: #666;
+    }
+    
+    .size-card.selected {
+      border: 3px solid #3498db;
+      background-color: #ebf7ff;
+    }
+    
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    
+    .action-buttons button {
+      padding: 10px 15px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .action-buttons button:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+    
+    #back-to-locations {
+      background-color: #e74c3c;
+    }
+    
+    #back-to-locations:hover {
+      background-color: #c0392b;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .item-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      padding: 15px;
+    }
+    
+    .item-card h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    
+    .item-card p {
+      margin: 5px 0;
+      color: #666;
+    }
+    
+    .item-card .material-color {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    
+    .location-grid, .furniture-grid, .size-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    /* Placeholder for missing images */
+    .placeholder-img {
+      background-color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 14px;
+      height: 180px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Common navigation will be inserted here by common-nav.js -->
+  </header>
+
+  <div class="container">
+    <h1>Furniture Builder</h1>
+    <!-- Location Selection -->
+    <section id="location-section">
+      <h2>Choose Location</h2>
+      <div class="location-grid">
+        <div class="location-card" data-location="office">
+          <img src="assets/locations/office.jpg" alt="Office" onerror="this.onerror=null; this.innerHTML='<i class="fas fa-building fa-3x"></i>'; this.className='placeholder-img';">
+          <p>Office</p>
+        </div>
+        <div class="location-card" data-location="bedroom">
+          <img src="assets/locations/bedroom.jpg" alt="Bedroom" onerror="this.onerror=null; this.innerHTML='<i class="fas fa-bed fa-3x"></i>'; this.className='placeholder-img';">
+          <p>Bedroom</p>
+        </div>
+        <div class="location-card" data-location="kitchen">
+          <img src="assets/locations/kitchen.jpg" alt="Kitchen" onerror="this.onerror=null; this.innerHTML='<i class="fas fa-utensils fa-3x"></i>'; this.className='placeholder-img';">
+          <p>Kitchen</p>
+        </div>
+        <div class="location-card" data-location="living_room">
+          <img src="assets/locations/living_room.jpg" alt="Living Room" onerror="this.onerror=null; this.innerHTML='<i class="fas fa-couch fa-3x"></i>'; this.className='placeholder-img';">
+          <p>Living Room</p>
+        </div>
+        <div class="location-card" data-location="restaurant">
+          <img src="assets/locations/restaurant.jpg" alt="Restaurant" onerror="this.onerror=null; this.innerHTML='<i class="fas fa-utensils fa-3x"></i>'; this.className='placeholder-img';">
+          <p>Restaurant</p>
+        </div>
+        <div class="location-card" data-location="lobby">
+          <img src="assets/locations/lobby.jpg" alt="Lobby" onerror="this.onerror=null; this.innerHTML='<i class="fas fa-door-open fa-3x"></i>'; this.className='placeholder-img';">
+          <p>Lobby</p>
+        </div>
+          </div>
+          <p>Kitchen</p>
+        </div>
+        <div class="location-card" data-location="living_room">
+          <div class="placeholder-img">
+            <i class="fas fa-couch fa-3x"></i>
+          </div>
+          <p>Living Room</p>
+        </div>
+        <div class="location-card" data-location="restaurant">
+          <div class="placeholder-img">
+            <i class="fas fa-concierge-bell fa-3x"></i>
+          </div>
+          <p>Restaurant</p>
+        </div>
+        <div class="location-card" data-location="lobby">
+          <div class="placeholder-img">
+            <i class="fas fa-door-open fa-3x"></i>
+          </div>
+          <p>Lobby</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Furniture Selection -->
+    <section id="furniture-section" class="hidden">
+      <h2>Choose Furniture</h2>
+      <div class="furniture-grid"></div>
+      <div class="action-buttons">
+        <button id="back-to-location">Back to Locations</button>
+      </div>
+    </section>
+
+    <!-- Size Selection -->
+    <section id="size-section" class="hidden">
+      <h2>Choose Size</h2>
+      <p class="size-description">Select the size that best fits your space requirements:</p>
+      <div class="size-grid">
+        <div class="size-card" data-size="small">
+          <h3>Small</h3>
+          <p>Compact size, ideal for limited spaces</p>
+        </div>
+        <div class="size-card" data-size="medium">
+          <h3>Medium</h3>
+          <p>Standard size, suitable for most spaces</p>
+        </div>
+        <div class="size-card" data-size="large">
+          <h3>Large</h3>
+          <p>Spacious size, perfect for larger areas</p>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button id="back-to-furniture">Back to Furniture</button>
+      </div>
+    </section>
+
+    <!-- Items Display -->
+    <section id="items-section" class="hidden">
+      <h2>Materials Required</h2>
+      <div class="material-info">
+        <h3>Material Requirements</h3>
+        <p>Below is a detailed list of all materials needed for your selected furniture:</p>
+      </div>
+      <div class="items-grid"></div>
+      <div class="action-buttons">
+        <button id="calculate-wood">Calculate Wood Sheets</button>
+        <button id="generate-quotation">Generate Quotation</button>
+        <button id="view-3d-model">View in 3D</button>
+        <button id="back-to-size">Back to Size Selection</button>
+        <button id="back-to-locations">Start Over</button>
+        <button id="room-calculator-btn" onclick="window.location.href='room-calculator.html'">Room Calculator</button>
+      </div>
+      
+      <div class="room-size-section hidden" id="room-size-section">
+        <h3>Room Dimensions</h3>
+        <p>Enter your room dimensions to get furniture recommendations</p>
+        
+        <div class="room-size-inputs">
+          <div class="input-group">
+            <label for="room-length">Length (meters):</label>
+            <input type="number" id="room-length" min="1" step="0.1" value="4">
+          </div>
+          
+          <div class="input-group">
+            <label for="room-width">Width (meters):</label>
+            <input type="number" id="room-width" min="1" step="0.1" value="3">
+          </div>
+          
+          <button id="calculate-room-btn">Get Recommendations</button>
+        </div>
+        
+        <div id="room-recommendations" class="hidden">
+          <!-- Room recommendations will be displayed here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Items Display -->
+    <section id="selected-items-section" class="hidden">
+      <h2>Selected Items</h2>
+      <div class="selected-items-grid"></div>
+    </section>
+  </div>
+
+  <script src="database.js"></script>
+  <script>
+    // Global variables
+    let selectedLocation = null;
+    let selectedFurniture = null;
+    let selectedSize = null;
+    let furnitureData = {};
+
+    // DOM elements
+    const locationSection = document.getElementById('location-section');
+    const furnitureSection = document.getElementById('furniture-section');
+    const sizeSection = document.getElementById('size-section');
+    const itemsSection = document.getElementById('items-section');
+    const selectedItemsSection = document.getElementById('selected-items-section');
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up event listeners
+      setupLocationCards();
+      setupNavigationButtons();
+      
+      // Load furniture data from database.js
+      if (typeof furnitureDatabase !== 'undefined') {
+        console.log('Using database.js furniture data');
+        furnitureData = furnitureDatabase;
+      } else {
+        // Fallback data if database.js is not loaded properly
+        console.log('Using fallback furniture data');
+        furnitureData = {
+          office: {
+            file_cabinet: {
+              name: "File Cabinet",
+              description: "Storage for documents and files",
+              image: "assets/furniture/file_cabinet.jpg",
+              sizes: {
+                small: { name: "Small (2-drawer)", description: "40x70x50 cm" },
+                medium: { name: "Medium (3-drawer)", description: "45x100x55 cm" },
+                large: { name: "Large (4-drawer)", description: "50x130x60 cm" }
+              }
+            },
+            desk: {
+              name: "Office Desk",
+              description: "Workspace for your office",
+              image: "assets/furniture/desk.jpg",
+              sizes: {
+                small: { name: "Small", description: "100x60x75 cm" },
+                medium: { name: "Medium", description: "120x70x75 cm" },
+                large: { name: "Large", description: "150x80x75 cm" }
+              }
+            }
+          },
+          bedroom: {
+            bed: {
+              name: "Bed",
+              description: "Comfortable sleeping space",
+              image: "assets/furniture/bed.jpg",
+              sizes: {
+                small: { name: "Single", description: "90x200 cm" },
+                medium: { name: "Double", description: "140x200 cm" },
+                large: { name: "King", description: "180x200 cm" }
+              }
+            },
+            wardrobe: {
+              name: "Wardrobe",
+              description: "Storage for clothes and accessories",
+              image: "assets/furniture/wardrobe.jpg",
+              sizes: {
+                small: { name: "Small", description: "100x180x60 cm" },
+                medium: { name: "Medium", description: "150x200x60 cm" },
+                large: { name: "Large", description: "200x220x60 cm" }
+              }
+            }
+          },
+          kitchen: {
+            cabinet: {
+              name: "Kitchen Cabinet",
+              description: "Storage for kitchen items",
+              image: "assets/furniture/cabinet.jpg",
+              sizes: {
+                small: { name: "Small", description: "60x80x30 cm" },
+                medium: { name: "Medium", description: "80x80x30 cm" },
+                large: { name: "Large", description: "100x80x30 cm" }
+              }
+            },
+            island: {
+              name: "Kitchen Island",
+              description: "Central workspace for your kitchen",
+              image: "assets/furniture/island.jpg",
+              sizes: {
+                small: { name: "Small", description: "120x90x60 cm" },
+                medium: { name: "Medium", description: "150x90x60 cm" },
+                large: { name: "Large", description: "180x90x60 cm" }
+              }
+            }
+          },
+          living_room: {
+            sofa: {
+              name: "Sofa",
+              description: "Comfortable seating for your living room",
+              image: "assets/furniture/sofa.jpg",
+              sizes: {
+                small: { name: "2-Seater", description: "150x85x90 cm" },
+                medium: { name: "3-Seater", description: "200x85x90 cm" },
+                large: { name: "L-Shaped", description: "250x85x90 cm" }
+              }
+            },
+            coffee_table: {
+              name: "Coffee Table",
+              description: "Central table for your living room",
+              image: "assets/furniture/coffee_table.jpg",
+              sizes: {
+                small: { name: "Small", description: "80x45x50 cm" },
+                medium: { name: "Medium", description: "100x45x60 cm" },
+                large: { name: "Large", description: "120x45x70 cm" }
+              }
+            }
+          }
+        };
+      } else {
+        console.log('Using database.js furniture data');
+      }
+    });
+
+    // Set up location card event listeners
+    function setupLocationCards() {
+      const locationCards = document.querySelectorAll('.location-card');
+      
+      locationCards.forEach(card => {
+        card.addEventListener('click', function() {
+          // Remove selected class from all cards
+          locationCards.forEach(c => c.classList.remove('selected'));
+          
+          // Add selected class to clicked card
+          this.classList.add('selected');
+          
+          // Store selected location
+          selectedLocation = this.getAttribute('data-location');
+          console.log('Selected location:', selectedLocation);
+          
+          // Load furniture options based on location
+          loadFurnitureOptions(selectedLocation);
+          
+          // Show furniture section
+          locationSection.classList.add('hidden');
+          furnitureSection.classList.remove('hidden');
+        });
+      });
+    }
+
+    // Set up navigation button event listeners
+    function setupNavigationButtons() {
+      // Back to location button
+      document.getElementById('back-to-location')?.addEventListener('click', function() {
+        furnitureSection.classList.add('hidden');
+        locationSection.classList.remove('hidden');
+      });
+      
+      // Back to furniture button
+      document.getElementById('back-to-furniture')?.addEventListener('click', function() {
+        sizeSection.classList.add('hidden');
+        furnitureSection.classList.remove('hidden');
+      });
+      
+      // Back to size button
+      document.getElementById('back-to-size')?.addEventListener('click', function() {
+        itemsSection.classList.add('hidden');
+        sizeSection.classList.remove('hidden');
+      });
+      
+      // Back to locations (start over) button
+      document.getElementById('back-to-locations')?.addEventListener('click', function() {
+        // Reset selections
+        selectedLocation = null;
+        selectedFurniture = null;
+        selectedSize = null;
+        
+        // Reset UI
+        const locationCards = document.querySelectorAll('.location-card');
+        locationCards.forEach(c => c.classList.remove('selected'));
+        
+        // Show location section
+        itemsSection.classList.add('hidden');
+        sizeSection.classList.add('hidden');
+        furnitureSection.classList.add('hidden');
+        locationSection.classList.remove('hidden');
+      });
+      
+      // View 3D model button
+      document.getElementById('view-3d-model')?.addEventListener('click', function() {
+        if (selectedFurniture && selectedSize) {
+          // Store selected furniture and size in localStorage
+          localStorage.setItem('selectedFurniture', selectedFurniture);
+          localStorage.setItem('selectedSize', selectedSize);
+          
+          // Navigate to 3D viewer page
+          window.location.href = 'room-calculator.html';
+        }
+      });
+      
+      // Calculate wood button
+      document.getElementById('calculate-wood')?.addEventListener('click', function() {
+        alert('Wood calculation feature coming soon!');
+      });
+      
+      // Generate quotation button
+      document.getElementById('generate-quotation')?.addEventListener('click', function() {
+        alert('Quotation generation feature coming soon!');
+      });
+    }
+
+    // Load furniture options based on selected location
+    function loadFurnitureOptions(location) {
+      const furnitureGrid = document.querySelector('.furniture-grid');
+      furnitureGrid.innerHTML = ''; // Clear existing options
+      
+      // Get furniture options for the selected location
+      const furnitureOptions = furnitureData[location] || {};
+      console.log('Furniture options for', location, ':', Object.keys(furnitureOptions));
+      
+      // Create furniture cards
+      for (const [key, furniture] of Object.entries(furnitureOptions)) {
+        const furnitureCard = document.createElement('div');
+        furnitureCard.className = 'furniture-card';
+        furnitureCard.setAttribute('data-furniture', key);
+        
+        // Create image or placeholder
+        if (furniture.image && !furniture.image.includes('undefined')) {
+          const img = document.createElement('img');
+          img.src = furniture.image;
+          img.alt = furniture.name;
+          furnitureCard.appendChild(img);
+        } else {
+          const placeholder = document.createElement('div');
+          placeholder.className = 'placeholder-img';
+          placeholder.innerHTML = `<i class="fas fa-chair fa-3x"></i>`;
+          furnitureCard.appendChild(placeholder);
+        }
+        
+        // Create content
+        const content = document.createElement('div');
+        content.className = 'card-content';
+        
+        const title = document.createElement('h3');
+        title.textContent = furniture.name || key.replace('_', ' ');
+        content.appendChild(title);
+        
+        const desc = document.createElement('p');
+        desc.textContent = furniture.description || 'Furniture for your ' + location.replace('_', ' ');
+        content.appendChild(desc);
+        
+        furnitureCard.appendChild(content);
+        furnitureGrid.appendChild(furnitureCard);
+        
+        // Add event listener
+        furnitureCard.addEventListener('click', function() {
+          // Remove selected class from all cards
+          document.querySelectorAll('.furniture-card').forEach(c => c.classList.remove('selected'));
+          
+          // Add selected class to clicked card
+          this.classList.add('selected');
+          
+          // Store selected furniture
+          selectedFurniture = this.getAttribute('data-furniture');
+          console.log('Selected furniture:', selectedFurniture);
+          
+          // Load size options based on selected furniture
+          loadSizeOptions(selectedLocation, selectedFurniture);
+          
+          // Show size section
+          furnitureSection.classList.add('hidden');
+          sizeSection.classList.remove('hidden');
+        });
+      }
+      
+      // If no furniture options, show a message
+      if (Object.keys(furnitureOptions).length === 0) {
+        const noOptions = document.createElement('div');
+        noOptions.className = 'no-options';
+        noOptions.innerHTML = `<p>No furniture options available for ${location}. Please select another location.</p>`;
+        furnitureGrid.appendChild(noOptions);
+      }
+    }
+
+    // Create furniture cards in the grid
+    function createFurnitureCards(furnitureItems) {
+      const furnitureGrid = document.querySelector('.furniture-grid');
+      
+      furnitureItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'furniture-card';
+        card.setAttribute('data-furniture', item.id);
+        
+        card.innerHTML = `
+          <div class="placeholder-img">
+            <i class="fas fa-chair fa-3x"></i>
+          </div>
+          <div class="card-content">
+            <h3>${formatFurnitureName(item.id || item.name)}</h3>
+            <p>${item.description || 'No description available'}</p>
+          </div>
+        `;
+        
+        card.addEventListener('click', function() {
+          // Remove selected class from all cards
+          document.querySelectorAll('.furniture-card').forEach(c => 
+            c.classList.remove('selected')
+          );
+          
+          // Add selected class to clicked card
+          this.classList.add('selected');
+          
+          // Store selected furniture
+          selectedFurniture = this.getAttribute('data-furniture');
+          
+          // Show size section
+          furnitureSection.classList.add('hidden');
+          sizeSection.classList.remove('hidden');
+          
+          // Set up size selection
+          setupSizeSelection();
+        });
+        
+        furnitureGrid.appendChild(card);
+      });
+    }
+
+    // Set up size selection
+    function setupSizeSelection() {
+      const sizeCards = document.querySelectorAll('.size-card');
+      
+      sizeCards.forEach(card => {
+        card.addEventListener('click', function() {
+          // Remove selected class from all cards
+          sizeCards.forEach(c => c.classList.remove('selected'));
+          
+          // Add selected class to clicked card
+          this.classList.add('selected');
+          
+          // Store selected size
+          selectedSize = this.getAttribute('data-size');
+          
+          // Calculate and display materials
+          calculateMaterials();
+          
+          // Show items section
+          sizeSection.classList.add('hidden');
+          itemsSection.classList.remove('hidden');
+        });
+      });
+    }
+
+    // Calculate materials based on selected furniture and size
+    function calculateMaterials() {
+      const itemsGrid = document.querySelector('.items-grid');
+      itemsGrid.innerHTML = '';
+      
+      // Find the selected furniture in the database
+      const furniture = furnitureData.find(item => item.id === selectedFurniture);
+      
+      if (!furniture) {
+        // Create default materials if furniture not found in database
+        const defaultMaterials = [
+          { name: 'Wood Panels', quantity: selectedSize === 'small' ? 4 : (selectedSize === 'medium' ? 6 : 8), unit: 'pieces' },
+          { name: 'Screws', quantity: selectedSize === 'small' ? 16 : (selectedSize === 'medium' ? 24 : 32), unit: 'pieces' },
+          { name: 'Wood Glue', quantity: selectedSize === 'small' ? 0.5 : (selectedSize === 'medium' ? 0.75 : 1), unit: 'bottle' }
+        ];
+        
+        createMaterialCards(defaultMaterials);
+      } else {
+        // Get materials based on furniture and size
+        const materials = furniture.materials?.[selectedSize] || [];
+        createMaterialCards(materials);
+      }
+    }
+
+    // Create material cards in the grid
+    function createMaterialCards(materials) {
+      const itemsGrid = document.querySelector('.items-grid');
+      
+      materials.forEach(material => {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        
+        // Create color sample for wood types
+        let colorSample = '';
+        if (material.type === 'wood') {
+          const woodColor = getWoodColor(material.wood || 'Oak');
+          colorSample = `<span class="material-color" style="background-color: ${woodColor};"></span>`;
+        }
+        
+        card.innerHTML = `
+          <h3>${colorSample}${material.name}</h3>
+          <p><strong>Quantity:</strong> ${material.quantity} ${material.unit || 'pieces'}</p>
+          ${material.dimensions ? `<p><strong>Dimensions:</strong> ${material.dimensions}</p>` : ''}
+          ${material.notes ? `<p><strong>Notes:</strong> ${material.notes}</p>` : ''}
+        `;
+        
+        itemsGrid.appendChild(card);
+      });
+    }
+
+    // Format furniture name for display
+    function formatFurnitureName(name) {
+      return name
+        .replace(/_/g, ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+
+    // Get wood color for visualization
+    function getWoodColor(woodType) {
+      const woodColors = {
+        'Oak': '#b68c59',
+        'Pine': '#d9b380',
+        'Birch': '#f2d2a9',
+        'Plywood': '#d7bc91',
+        'Maple': '#c19a6b',
+        'Walnut': '#5c4033',
+        'Teak': '#b38b6d',
+        'Mahogany': '#7d3a2a'
+      };
+      
+      return woodColors[woodType] || '#b68c59';
+    }
+  </script>
+  <script src="common-nav.js"></script>
+</body>
+</html>

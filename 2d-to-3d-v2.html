@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D to 3D Converter - FurniCraft Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="common-nav.css">
+    <link rel="stylesheet" href="2d-to-3d-v2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+</head>
+<body>
+    <header>
+        <!-- Common navigation will be inserted here by common-nav.js -->
+    </header>
+
+    <main class="container">
+        <h1 class="page-title"><i class="fas fa-cube"></i> 2D to 3D Furniture Converter</h1>
+        
+        <div class="converter-container">
+            <div class="upload-section">
+                <div class="card">
+                    <h2><i class="fas fa-upload"></i> Upload Design</h2>
+                    <p class="section-description">Upload a 2D furniture design to convert it into a 3D model. Supported formats: JPG, PNG, SVG.</p>
+                    
+                    <div id="upload-area" class="upload-area">
+                        <div class="upload-instructions">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop your design here or</p>
+                            <label for="file-input" class="upload-button">Browse Files</label>
+                            <input type="file" id="file-input" accept="image/*" hidden>
+                        </div>
+                        <img id="preview-image" class="preview-image" alt="Design preview">
+                        <div id="file-info" class="file-info">
+                            <span id="file-name"></span>
+                            <button id="remove-file" class="remove-button"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div id="dimensions-form" class="dimensions-form">
+                        <h3>Dimensions</h3>
+                        <div class="dimensions-grid">
+                            <div class="dimension-input">
+                                <label for="width">Width (cm)</label>
+                                <input type="number" id="width" min="1" max="500" placeholder="Width">
+                            </div>
+                            <div class="dimension-input">
+                                <label for="depth">Depth (cm)</label>
+                                <input type="number" id="depth" min="1" max="500" placeholder="Depth">
+                            </div>
+                            <div class="dimension-input">
+                                <label for="height">Height (cm)</label>
+                                <input type="number" id="height" min="1" max="500" placeholder="Height">
+                            </div>
+                        </div>
+                        <div class="material-select">
+                            <label for="material">Material</label>
+                            <select id="material">
+                                <option value="wood">Wood</option>
+                                <option value="metal">Metal</option>
+                                <option value="plastic">Plastic</option>
+                                <option value="glass">Glass</option>
+                                <option value="fabric">Fabric</option>
+                            </select>
+                        </div>
+                        <button id="generate-3d" class="generate-button">
+                            <i class="fas fa-magic"></i> Generate 3D Model
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <div class="card">
+                    <h2><i class="fas fa-cube"></i> 3D Preview</h2>
+                    <p class="section-description">Interact with your 3D model. Use mouse to rotate, scroll to zoom, and right-click to pan.</p>
+                    
+                    <div id="canvas-container" class="canvas-container">
+                        <div id="loading" class="loading">
+                            <div class="spinner"></div>
+                            <p>Generating 3D model...</p>
+                        </div>
+                        <canvas id="3d-canvas"></canvas>
+                    </div>
+                    
+                    <div id="controls" class="controls">
+                        <button id="rotate-left" class="control-button"><i class="fas fa-undo"></i></button>
+                        <button id="rotate-right" class="control-button"><i class="fas fa-redo"></i></button>
+                        <button id="zoom-in" class="control-button"><i class="fas fa-search-plus"></i></button>
+                        <button id="zoom-out" class="control-button"><i class="fas fa-search-minus"></i></button>
+                        <button id="reset-view" class="control-button"><i class="fas fa-home"></i></button>
+                    </div>
+                </div>
+                
+                <div id="materials-section" class="card materials-section">
+                    <h2><i class="fas fa-list"></i> Materials Required</h2>
+                    <div id="materials-list" class="materials-list">
+                        <p class="empty-state">Generate a 3D model to see required materials</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="save-model" class="action-button">
+                <i class="fas fa-save"></i> Save Model
+            </button>
+            <button id="export-model" class="action-button">
+                <i class="fas fa-file-export"></i> Export Model
+            </button>
+            <button id="share-model" class="action-button">
+                <i class="fas fa-share-alt"></i> Share
+            </button>
+        </div>
+    </main>
+
+    <script src="common-nav.js"></script>
+    <script src="2d-to-3d-v2.js"></script>
+</body>
+</html>

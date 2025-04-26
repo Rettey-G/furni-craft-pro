@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FurniCraft Pro - 3D Viewer</title>
+  <link rel="stylesheet" href="3d-viewer.css">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>FurniCraft Pro - 3D Furniture Viewer</h1>
+      <nav>
+        <button id="back-to-selection">Back to Selection</button>
+        <button id="toggle-wireframe">Toggle Wireframe</button>
+        <button id="toggle-measurements">Show Measurements</button>
+        <button id="room-calculator" onclick="window.location.href='room-calculator.html'">Room Calculator</button>
+      </nav>
+    </header>
+
+    <div class="viewer-container">
+      <div class="sidebar">
+        <div class="furniture-info">
+          <h2>Furniture Information</h2>
+          <div id="furniture-details">
+            <p>Select a furniture item to view details</p>
+          </div>
+        </div>
+        <div class="material-list">
+          <h2>Materials</h2>
+          <ul id="materials-list">
+            <!-- Materials will be populated here -->
+          </ul>
+        </div>
+      </div>
+      
+      <div class="canvas-container">
+        <div id="loading">Loading 3D Model...</div>
+        <canvas id="3d-viewer"></canvas>
+        <div class="controls-info">
+          <p>Left click + drag: Rotate | Right click + drag: Pan | Scroll: Zoom</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="database.js"></script>
+  <script src="3d-viewer.js"></script>
+  <script src="3d-viewer-new-models.js"></script>
+  <script src="room-calculator.js"></script>
+</body>
+</html>

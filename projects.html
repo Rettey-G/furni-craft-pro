@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management - FurniCraft Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="improved-nav.css">
+    <link rel="stylesheet" href="projects.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <!-- Common navigation will be inserted here by common-nav.js -->
+    </header>
+
+    <main class="container">
+        <div class="subscription-banner" id="subscription-banner">
+            <div class="banner-content">
+                <div class="banner-text">
+                    <h3>Upgrade to access all project management features</h3>
+                    <p>Standard and Premium plans allow more projects and advanced features</p>
+                </div>
+                <div class="banner-actions">
+                    <a href="home.html#subscription-plans" class="btn btn-primary">View Plans</a>
+                    <button class="btn-close" id="close-banner"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-project-diagram"></i> Project Management</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="new-project-btn">
+                    <i class="fas fa-plus"></i> New Project
+                </button>
+                <div class="search-container">
+                    <input type="text" id="project-search" placeholder="Search projects...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="projects-dashboard">
+            <div class="dashboard-sidebar">
+                <div class="sidebar-section">
+                    <h3>Filter Projects</h3>
+                    <ul class="filter-list">
+                        <li class="active" data-filter="all">
+                            <i class="fas fa-border-all"></i> All Projects <span class="count">6</span>
+                        </li>
+                        <li data-filter="recent">
+                            <i class="fas fa-clock"></i> Recent <span class="count">3</span>
+                        </li>
+                        <li data-filter="favorites">
+                            <i class="fas fa-star"></i> Favorites <span class="count">2</span>
+                        </li>
+                        <li data-filter="shared">
+                            <i class="fas fa-users"></i> Shared <span class="count">1</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Project Types</h3>
+                    <ul class="type-list">
+                        <li data-type="furniture">
+                            <i class="fas fa-chair"></i> Furniture <span class="count">3</span>
+                        </li>
+                        <li data-type="room">
+                            <i class="fas fa-door-open"></i> Room Layout <span class="count">2</span>
+                        </li>
+                        <li data-type="material">
+                            <i class="fas fa-cut"></i> Material Optimization <span class="count">1</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Storage</h3>
+                    <div class="storage-meter">
+                        <div class="storage-bar">
+                            <div class="storage-used" style="width: 40%;"></div>
+                        </div>
+                        <p>2/5 projects used (Free Plan)</p>
+                    </div>
+                    <a href="home.html#subscription-plans" class="btn btn-secondary btn-sm btn-block">
+                        Upgrade for More
+                    </a>
+                </div>
+            </div>
+
+            <div class="projects-content">
+                <div class="projects-grid" id="projects-grid">
+                    <!-- Project cards will be loaded here -->
+                    <div class="project-card" data-type="furniture" data-favorite="true">
+                        <div class="project-actions">
+                            <button class="action-btn favorite active"><i class="fas fa-star"></i></button>
+                            <div class="action-dropdown">
+                                <button class="action-btn dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-copy"></i> Duplicate</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-share-alt"></i> Share</a>
+                                    <a href="#" class="dropdown-item text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-preview">
+                            <img src="assets/projects/living-room-sofa.jpg" alt="Living Room Sofa">
+                        </div>
+                        <div class="project-info">
+                            <h3>Living Room Sofa</h3>
+                            <div class="project-meta">
+                                <span class="project-type"><i class="fas fa-chair"></i> Furniture</span>
+                                <span class="project-date">Updated 2 days ago</span>
+                            </div>
+                            <p class="project-description">Custom L-shaped sofa with premium materials for client's beach house.</p>
+                            <div class="project-tags">
+                                <span class="tag">Sofa</span>
+                                <span class="tag">Living Room</span>
+                                <span class="tag">Custom</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card" data-type="room">
+                        <div class="project-actions">
+                            <button class="action-btn favorite"><i class="fas fa-star"></i></button>
+                            <div class="action-dropdown">
+                                <button class="action-btn dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-copy"></i> Duplicate</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-share-alt"></i> Share</a>
+                                    <a href="#" class="dropdown-item text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-preview">
+                            <img src="assets/projects/master-bedroom.jpg" alt="Master Bedroom">
+                        </div>
+                        <div class="project-info">
+                            <h3>Master Bedroom</h3>
+                            <div class="project-meta">
+                                <span class="project-type"><i class="fas fa-door-open"></i> Room Layout</span>
+                                <span class="project-date">Updated 1 week ago</span>
+                            </div>
+                            <p class="project-description">Complete bedroom furniture set with wardrobe, bed, and nightstands.</p>
+                            <div class="project-tags">
+                                <span class="tag">Bedroom</span>
+                                <span class="tag">Complete Set</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card" data-type="material" data-favorite="true">
+                        <div class="project-actions">
+                            <button class="action-btn favorite active"><i class="fas fa-star"></i></button>
+                            <div class="action-dropdown">
+                                <button class="action-btn dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-copy"></i> Duplicate</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-share-alt"></i> Share</a>
+                                    <a href="#" class="dropdown-item text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-preview">
+                            <img src="assets/projects/kitchen-cabinets.jpg" alt="Kitchen Cabinets">
+                        </div>
+                        <div class="project-info">
+                            <h3>Kitchen Cabinets</h3>
+                            <div class="project-meta">
+                                <span class="project-type"><i class="fas fa-cut"></i> Material Optimization</span>
+                                <span class="project-date">Updated 3 days ago</span>
+                            </div>
+                            <p class="project-description">Optimized cutting plan for kitchen cabinets with minimal waste.</p>
+                            <div class="project-tags">
+                                <span class="tag">Kitchen</span>
+                                <span class="tag">Cabinets</span>
+                                <span class="tag">Optimization</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card" data-type="furniture">
+                        <div class="project-actions">
+                            <button class="action-btn favorite"><i class="fas fa-star"></i></button>
+                            <div class="action-dropdown">
+                                <button class="action-btn dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-copy"></i> Duplicate</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-share-alt"></i> Share</a>
+                                    <a href="#" class="dropdown-item text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-preview">
+                            <img src="assets/projects/dining-table.jpg" alt="Dining Table">
+                        </div>
+                        <div class="project-info">
+                            <h3>Dining Table</h3>
+                            <div class="project-meta">
+                                <span class="project-type"><i class="fas fa-chair"></i> Furniture</span>
+                                <span class="project-date">Updated 2 weeks ago</span>
+                            </div>
+                            <p class="project-description">Extendable dining table with seating for 6-8 people.</p>
+                            <div class="project-tags">
+                                <span class="tag">Dining</span>
+                                <span class="tag">Table</span>
+                                <span class="tag">Extendable</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card shared" data-type="room">
+                        <div class="project-actions">
+                            <button class="action-btn favorite"><i class="fas fa-star"></i></button>
+                            <div class="action-dropdown">
+                                <button class="action-btn dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-copy"></i> Duplicate</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-share-alt"></i> Share</a>
+                                    <a href="#" class="dropdown-item text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-preview">
+                            <img src="assets/projects/office-layout.jpg" alt="Office Layout">
+                            <div class="shared-badge">
+                                <i class="fas fa-users"></i> Shared
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3>Office Layout</h3>
+                            <div class="project-meta">
+                                <span class="project-type"><i class="fas fa-door-open"></i> Room Layout</span>
+                                <span class="project-date">Updated 5 days ago</span>
+                            </div>
+                            <p class="project-description">Complete office setup with desks, chairs, and storage solutions.</p>
+                            <div class="project-tags">
+                                <span class="tag">Office</span>
+                                <span class="tag">Workspace</span>
+                                <span class="tag">Commercial</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card" data-type="furniture">
+                        <div class="project-actions">
+                            <button class="action-btn favorite"><i class="fas fa-star"></i></button>
+                            <div class="action-dropdown">
+                                <button class="action-btn dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-copy"></i> Duplicate</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-share-alt"></i> Share</a>
+                                    <a href="#" class="dropdown-item text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-preview">
+                            <img src="assets/projects/bookshelf.jpg" alt="Bookshelf">
+                        </div>
+                        <div class="project-info">
+                            <h3>Bookshelf</h3>
+                            <div class="project-meta">
+                                <span class="project-type"><i class="fas fa-chair"></i> Furniture</span>
+                                <span class="project-date">Updated 1 month ago</span>
+                            </div>
+                            <p class="project-description">Custom bookshelf with adjustable shelves for home library.</p>
+                            <div class="project-tags">
+                                <span class="tag">Bookshelf</span>
+                                <span class="tag">Storage</span>
+                                <span class="tag">Custom</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h3>No projects found</h3>
+                    <p>Try adjusting your filters or create a new project</p>
+                    <button class="btn btn-primary" id="empty-create-btn">
+                        <i class="fas fa-plus"></i> Create New Project
+                    </button>
+                </div>
+
+                <div class="pagination">
+                    <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- New Project Modal -->
+    <div class="modal" id="new-project-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Project</h2>
+                <button class="modal-close" id="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="new-project-form">
+                    <div class="form-group">
+                        <label for="project-name">Project Name</label>
+                        <input type="text" id="project-name" placeholder="Enter project name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="project-type">Project Type</label>
+                        <select id="project-type" required>
+                            <option value="">Select a type</option>
+                            <option value="furniture">Furniture</option>
+                            <option value="room">Room Layout</option>
+                            <option value="material">Material Optimization</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="project-description">Description</label>
+                        <textarea id="project-description" placeholder="Enter project description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="project-tags">Tags (comma separated)</label>
+                        <input type="text" id="project-tags" placeholder="e.g. bedroom, custom, modern">
+                    </div>
+                    <div class="form-group">
+                        <label>Project Template</label>
+                        <div class="template-grid">
+                            <div class="template-card active">
+                                <div class="template-icon">
+                                    <i class="fas fa-file"></i>
+                                </div>
+                                <div class="template-name">Blank Project</div>
+                            </div>
+                            <div class="template-card">
+                                <div class="template-icon">
+                                    <i class="fas fa-bed"></i>
+                                </div>
+                                <div class="template-name">Bedroom Set</div>
+                            </div>
+                            <div class="template-card">
+                                <div class="template-icon">
+                                    <i class="fas fa-couch"></i>
+                                </div>
+                                <div class="template-name">Living Room</div>
+                            </div>
+                            <div class="template-card">
+                                <div class="template-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="template-name">Kitchen</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-project">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <script src="improved-nav.js"></script>
+    <script src="projects.js"></script>
+</body>
+</html>

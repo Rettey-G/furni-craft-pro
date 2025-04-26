@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Room Planner - FurniCraft Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="improved-nav.css">
+    <link rel="stylesheet" href="room-planner.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <!-- Common navigation will be inserted here by common-nav.js -->
+    </header>
+
+    <main class="container">
+        <div class="premium-badge">
+            <i class="fas fa-crown"></i> Premium Feature
+        </div>
+
+        <div class="subscription-overlay" id="subscription-overlay">
+            <div class="overlay-content">
+                <div class="overlay-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>Premium Feature</h2>
+                <p>The Advanced 3D Room Planner is available exclusively to Premium subscribers.</p>
+                <div class="overlay-actions">
+                    <a href="home.html#subscription-plans" class="btn btn-primary">Upgrade Now</a>
+                    <button class="btn btn-secondary" id="preview-mode-btn">Try Preview Mode</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-cube"></i> Advanced 3D Room Planner</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="save-room-btn">
+                    <i class="fas fa-save"></i> Save Room
+                </button>
+                <button class="btn btn-secondary" id="share-room-btn">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+                <button class="btn btn-secondary" id="export-room-btn">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+            </div>
+        </div>
+
+        <div class="room-planner-container">
+            <div class="tools-panel">
+                <div class="tools-section">
+                    <h3>Room Setup</h3>
+                    <div class="tools-grid">
+                        <button class="tool-btn" data-tool="room-size">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <span>Room Size</span>
+                        </button>
+                        <button class="tool-btn" data-tool="wall">
+                            <i class="fas fa-grip-lines-vertical"></i>
+                            <span>Add Wall</span>
+                        </button>
+                        <button class="tool-btn" data-tool="door">
+                            <i class="fas fa-door-open"></i>
+                            <span>Add Door</span>
+                        </button>
+                        <button class="tool-btn" data-tool="window">
+                            <i class="fas fa-window-maximize"></i>
+                            <span>Add Window</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tools-section">
+                    <h3>Furniture</h3>
+                    <div class="furniture-categories">
+                        <button class="category-btn active" data-category="all">All</button>
+                        <button class="category-btn" data-category="living">Living Room</button>
+                        <button class="category-btn" data-category="bedroom">Bedroom</button>
+                        <button class="category-btn" data-category="kitchen">Kitchen</button>
+                        <button class="category-btn" data-category="bathroom">Bathroom</button>
+                        <button class="category-btn" data-category="office">Office</button>
+                    </div>
+                    <div class="furniture-items">
+                        <div class="furniture-item" data-type="sofa" data-category="living">
+                            <img src="assets/furniture/sofa.jpg" alt="Sofa">
+                            <span>Sofa</span>
+                        </div>
+                        <div class="furniture-item" data-type="coffee-table" data-category="living">
+                            <img src="assets/furniture/coffee-table.jpg" alt="Coffee Table">
+                            <span>Coffee Table</span>
+                        </div>
+                        <div class="furniture-item" data-type="tv-stand" data-category="living">
+                            <img src="assets/furniture/tv-stand.jpg" alt="TV Stand">
+                            <span>TV Stand</span>
+                        </div>
+                        <div class="furniture-item" data-type="bed" data-category="bedroom">
+                            <img src="assets/furniture/bed.jpg" alt="Bed">
+                            <span>Bed</span>
+                        </div>
+                        <div class="furniture-item" data-type="wardrobe" data-category="bedroom">
+                            <img src="assets/furniture/wardrobe.jpg" alt="Wardrobe">
+                            <span>Wardrobe</span>
+                        </div>
+                        <div class="furniture-item" data-type="nightstand" data-category="bedroom">
+                            <img src="assets/furniture/nightstand.jpg" alt="Nightstand">
+                            <span>Nightstand</span>
+                        </div>
+                        <div class="furniture-item" data-type="kitchen-cabinet" data-category="kitchen">
+                            <img src="assets/furniture/kitchen-cabinet.jpg" alt="Kitchen Cabinet">
+                            <span>Cabinet</span>
+                        </div>
+                        <div class="furniture-item" data-type="kitchen-island" data-category="kitchen">
+                            <img src="assets/furniture/kitchen-island.jpg" alt="Kitchen Island">
+                            <span>Island</span>
+                        </div>
+                        <div class="furniture-item" data-type="refrigerator" data-category="kitchen">
+                            <img src="assets/furniture/refrigerator.jpg" alt="Refrigerator">
+                            <span>Refrigerator</span>
+                        </div>
+                        <div class="furniture-item" data-type="desk" data-category="office">
+                            <img src="assets/furniture/desk.jpg" alt="Desk">
+                            <span>Desk</span>
+                        </div>
+                        <div class="furniture-item" data-type="office-chair" data-category="office">
+                            <img src="assets/furniture/office-chair.jpg" alt="Office Chair">
+                            <span>Office Chair</span>
+                        </div>
+                        <div class="furniture-item" data-type="bookcase" data-category="office">
+                            <img src="assets/furniture/bookcase.jpg" alt="Bookcase">
+                            <span>Bookcase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tools-section">
+                    <h3>Materials</h3>
+                    <div class="materials-grid">
+                        <div class="material-item" data-material="floor">
+                            <div class="material-preview" style="background-image: url('assets/materials/wood-floor.jpg')"></div>
+                            <span>Wood Floor</span>
+                        </div>
+                        <div class="material-item" data-material="wall">
+                            <div class="material-preview" style="background-image: url('assets/materials/white-wall.jpg')"></div>
+                            <span>White Wall</span>
+                        </div>
+                        <div class="material-item" data-material="wall">
+                            <div class="material-preview" style="background-image: url('assets/materials/brick-wall.jpg')"></div>
+                            <span>Brick Wall</span>
+                        </div>
+                        <div class="material-item" data-material="floor">
+                            <div class="material-preview" style="background-image: url('assets/materials/tile-floor.jpg')"></div>
+                            <span>Tile Floor</span>
+                        </div>
+                        <div class="material-item" data-material="wall">
+                            <div class="material-preview" style="background-image: url('assets/materials/blue-wall.jpg')"></div>
+                            <span>Blue Wall</span>
+                        </div>
+                        <div class="material-item" data-material="floor">
+                            <div class="material-preview" style="background-image: url('assets/materials/carpet-floor.jpg')"></div>
+                            <span>Carpet</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tools-section">
+                    <h3>Lighting</h3>
+                    <div class="tools-grid">
+                        <button class="tool-btn" data-tool="ceiling-light">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Ceiling Light</span>
+                        </button>
+                        <button class="tool-btn" data-tool="wall-light">
+                            <i class="fas fa-lamp"></i>
+                            <span>Wall Light</span>
+                        </button>
+                        <button class="tool-btn" data-tool="floor-lamp">
+                            <i class="fas fa-lamp-floor"></i>
+                            <span>Floor Lamp</span>
+                        </button>
+                        <button class="tool-btn" data-tool="ambient-light">
+                            <i class="fas fa-sun"></i>
+                            <span>Ambient Light</span>
+                        </button>
+                    </div>
+                    <div class="light-settings">
+                        <div class="setting-group">
+                            <label for="light-intensity">Intensity</label>
+                            <input type="range" id="light-intensity" min="0" max="100" value="70">
+                        </div>
+                        <div class="setting-group">
+                            <label for="light-color">Color</label>
+                            <input type="color" id="light-color" value="#FFFFFF">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="room-canvas-container">
+                <div class="room-canvas" id="room-canvas">
+                    <!-- 3D canvas will be inserted here by JavaScript -->
+                </div>
+                <div class="canvas-controls">
+                    <div class="control-group">
+                        <button class="control-btn" id="zoom-in">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button class="control-btn" id="zoom-out">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <button class="control-btn" id="rotate-left">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="control-btn" id="rotate-right">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <button class="control-btn" id="top-view">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                        <button class="control-btn" id="front-view">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <button class="control-btn" id="reset-view">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="properties-panel">
+                <div class="panel-header">
+                    <h3>Properties</h3>
+                    <button class="panel-toggle" id="toggle-properties">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="panel-content">
+                    <div class="properties-placeholder" id="no-selection">
+                        <p>Select an item to view and edit its properties</p>
+                    </div>
+                    <div class="properties-form" id="item-properties" style="display: none;">
+                        <div class="form-group">
+                            <label for="item-name">Name</label>
+                            <input type="text" id="item-name" value="Sofa">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-width">Width (cm)</label>
+                            <input type="number" id="item-width" value="200">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-depth">Depth (cm)</label>
+                            <input type="number" id="item-depth" value="85">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-height">Height (cm)</label>
+                            <input type="number" id="item-height" value="80">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-x">X Position</label>
+                            <input type="number" id="item-x" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-z">Z Position</label>
+                            <input type="number" id="item-z" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-rotation">Rotation (°)</label>
+                            <input type="number" id="item-rotation" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-material">Material</label>
+                            <select id="item-material">
+                                <option value="fabric">Fabric</option>
+                                <option value="leather">Leather</option>
+                                <option value="wood">Wood</option>
+                                <option value="metal">Metal</option>
+                                <option value="glass">Glass</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-color">Color</label>
+                            <input type="color" id="item-color" value="#3D8B40">
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-sm btn-primary" id="apply-properties">Apply</button>
+                            <button class="btn btn-sm btn-danger" id="delete-item">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="room-info">
+                    <div class="info-item">
+                        <span class="info-label">Room Size:</span>
+                        <span class="info-value">500 × 400 cm</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Items:</span>
+                        <span class="info-value">12</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Est. Cost:</span>
+                        <span class="info-value">24,500 MVR</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="premium-features">
+            <h2>Premium Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-ruler-combined"></i>
+                    </div>
+                    <h3>Precise Measurements</h3>
+                    <p>Get exact dimensions and positioning with millimeter precision.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-vr-cardboard"></i>
+                    </div>
+                    <h3>VR Preview</h3>
+                    <p>Experience your room design in virtual reality before building.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <h3>Professional Export</h3>
+                    <p>Export your designs to CAD, PDF, or high-resolution images.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <h3>Collaboration</h3>
+                    <p>Share your designs with clients and colleagues for real-time feedback.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Room Size Modal -->
+    <div class="modal" id="room-size-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Room Dimensions</h2>
+                <button class="modal-close" id="close-room-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="room-size-form">
+                    <div class="form-group">
+                        <label for="room-width">Width (cm)</label>
+                        <input type="number" id="room-width" value="500" min="100" max="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="room-length">Length (cm)</label>
+                        <input type="number" id="room-length" value="400" min="100" max="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="room-height">Height (cm)</label>
+                        <input type="number" id="room-height" value="280" min="100" max="500">
+                    </div>
+                    <div class="form-group">
+                        <label for="room-template">Room Template</label>
+                        <select id="room-template">
+                            <option value="empty">Empty Room</option>
+                            <option value="living">Living Room</option>
+                            <option value="bedroom">Bedroom</option>
+                            <option value="kitchen">Kitchen</option>
+                            <option value="office">Home Office</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-room-size">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <script src="improved-nav.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="room-planner.js"></script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wood Cutting Optimizer - FurniCraft Pro</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="common-nav.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    .optimizer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .unit-selector {
+      margin-bottom: 20px;
+    }
+    
+    .form-container {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .piece-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .teak-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    
+    .teak-option {
+      display: flex;
+      align-items: center;
+    }
+    
+    .teak-option input {
+      margin-right: 5px;
+    }
+    
+    .submit-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      grid-column: span 3;
+    }
+    
+    .submit-button:hover {
+      background-color: #45a049;
+    }
+    
+    .sheet-container {
+      margin-top: 30px;
+    }
+    
+    .sheet {
+      position: relative;
+      width: 800px;
+      height: 400px;
+      border: 2px solid #333;
+      margin-bottom: 30px;
+      background-color: #f5f5f5;
+      overflow: hidden;
+    }
+    
+    .sheet-title {
+      background-color: #333;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+    }
+    
+    .piece {
+      position: absolute;
+      background-color: #4CAF50;
+      border: 1px solid #333;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .piece-label {
+      font-size: 10px;
+      color: white;
+      text-align: center;
+      padding: 2px;
+      text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+    
+    .sheet-details {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+    }
+    
+    .total-row {
+      font-weight: bold;
+      background-color: #f8f9fa;
+    }
+    
+    @media (max-width: 900px) {
+      .piece-form {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .submit-button {
+        grid-column: span 2;
+      }
+      
+      .sheet {
+        width: 100%;
+        height: 300px;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      .piece-form {
+        grid-template-columns: 1fr;
+      }
+      
+      .submit-button {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Common navigation will be inserted here by common-nav.js -->
+  </header>
+
+  <div class="optimizer-container">
+    <h2>Wood Cutting Optimizer</h2>
+    <p>Enter the dimensions of your wood pieces to optimize cutting from standard plywood sheets.</p>
+    
+    <div class="unit-selector">
+      <label for="unitSelector">Measurement Unit:</label>
+      <select id="unitSelector">
+        <option value="mm">Millimeters (mm)</option>
+        <option value="cm">Centimeters (cm)</option>
+        <option value="in">Inches (in)</option>
+        <option value="ft">Feet (ft)</option>
+      </select>
+    </div>
+    
+    <div class="form-container">
+      <h3>Add Wood Piece</h3>
+      <form id="piece-form" class="piece-form">
+        <div class="form-group">
+          <label for="length">Length</label>
+          <input type="number" id="length" min="1" step="0.1" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="width">Width</label>
+          <input type="number" id="width" min="1" step="0.1" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" min="1" value="1" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Teak Edging</label>
+          <div class="teak-options">
+            <div class="teak-option">
+              <input type="checkbox" id="teak-top" name="teak" value="top">
+              <label for="teak-top">Top</label>
+            </div>
+            <div class="teak-option">
+              <input type="checkbox" id="teak-bottom" name="teak" value="bottom">
+              <label for="teak-bottom">Bottom</label>
+            </div>
+            <div class="teak-option">
+              <input type="checkbox" id="teak-left" name="teak" value="left">
+              <label for="teak-left">Left</label>
+            </div>
+            <div class="teak-option">
+              <input type="checkbox" id="teak-right" name="teak" value="right">
+              <label for="teak-right">Right</label>
+            </div>
+          </div>
+        </div>
+        
+        <button type="submit" class="submit-button">Add Piece</button>
+      </form>
+    </div>
+    
+    <div id="sheet-container" class="sheet-container">
+      <!-- Sheets will be rendered here -->
+    </div>
+    
+    <div class="sheet-details">
+      <h3>Sheet Details</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Sheet</th>
+            <th>Remaining Area</th>
+            <th>Remaining Length</th>
+            <th>Remaining Width</th>
+            <th>Number of Cuts</th>
+            <th>Teak Edging</th>
+          </tr>
+        </thead>
+        <tbody id="sheet-table-body">
+          <!-- Sheet details will be rendered here -->
+        </tbody>
+      </table>
+    </div>
+    
+    <div id="quotation">
+      <!-- Quotation will be rendered here -->
+    </div>
+  </div>
+
+  <script src="common-nav.js"></script>
+  <script src="wood-optimizer-new.js"></script>
+</body>
+</html>

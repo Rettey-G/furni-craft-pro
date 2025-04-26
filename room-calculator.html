@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Calculator - FurniCraft Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="selection.css">
+    <link rel="stylesheet" href="3d-viewer.css">
+    <link rel="stylesheet" href="common-nav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    <style>
+        .calculator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .calculator-form {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .results-panel {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+        }
+        
+        #roomRecommendations, #ceilingMaterials {
+            display: none;
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .back-button {
+            background-color: #f44336;
+        }
+        
+        .back-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Common navigation will be inserted here by common-nav.js -->
+    </header>
+    
+    <div class="page-title">
+        <h2>Room Calculator</h2>
+    </div>
+    
+    <div class="calculator-container">
+        <div class="calculator-grid">
+            <div class="calculator-form">
+                <h3>Room & Furniture Calculator</h3>
+                <p>Enter your room dimensions to get furniture recommendations and material calculations.</p>
+                
+                <form id="roomCalculatorForm">
+                    <div class="form-group">
+                        <label for="roomType">Room Type:</label>
+                        <select id="roomType" required>
+                            <option value="">Select a room type</option>
+                            <option value="kitchen">Kitchen</option>
+                            <option value="living_room">Living Room</option>
+                            <option value="bedroom">Bedroom</option>
+                            <option value="office">Office</option>
+                            <option value="restaurant">Restaurant</option>
+                            <option value="lobby">Lobby</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roomLength">Room Length (meters):</label>
+                        <input type="number" id="roomLength" min="1" step="0.1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roomWidth">Room Width (meters):</label>
+                        <input type="number" id="roomWidth" min="1" step="0.1" required>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="calculateCeiling">
+                        <label for="calculateCeiling">Calculate ceiling materials</label>
+                    </div>
+                    
+                    <div class="form-group ceiling-height" style="display: none;">
+                        <label for="ceilingHeight">Ceiling Height (meters):</label>
+                        <input type="number" id="ceilingHeight" min="1" step="0.1" value="2.4">
+                    </div>
+                    
+                    <button type="submit">Calculate</button>
+                </form>
+            </div>
+            
+            <div class="results-panel">
+                <div id="roomRecommendations">
+                    <!-- Room recommendations will be displayed here -->
+                </div>
+                
+                <div id="ceilingMaterials">
+                    <!-- Ceiling materials calculation will be displayed here -->
+                </div>
+                
+                <div id="3d-view-container" style="display: none;">
+                    <h3>3D Furniture Preview</h3>
+                    <div class="canvas-container" style="height: 500px; position: relative; margin-top: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <div id="loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(255,255,255,0.8); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;">Loading 3D Models...</div>
+                        <canvas id="3d-viewer" style="width: 100%; height: 100%;"></canvas>
+                        <div class="controls-info" style="position: absolute; bottom: 15px; left: 15px; font-size: 14px; color: #fff; background-color: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 4px;">
+                            <p style="margin: 0;">Left click + drag: Rotate | Right click + drag: Pan | Scroll: Zoom</p>
+                        </div>
+                    </div>
+                    <div class="furniture-controls" style="margin-top: 15px; display: flex; justify-content: center; gap: 15px;">
+                        <div class="controls" style="display: flex; gap: 15px;">
+                            <button id="toggle-wireframe" class="control-button"><i class="fas fa-cubes"></i> Toggle Wireframe</button>
+                            <button id="toggle-measurements" class="control-button"><i class="fas fa-ruler"></i> Show Measurements</button>
+                            <button id="reset-camera" class="control-button"><i class="fas fa-sync"></i> Reset View</button>
+                            <!-- Maldivian Theme button will be added here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <a href="index.html" class="button back-button">Back to Home</a>
+            <div>
+                <a href="selection.html" class="button">Go to Selection</a>
+                <a href="shop.html" class="button secondary-button">Shop for Materials</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="database.js"></script>
+    <script src="3d-viewer.js"></script>
+    <script src="room-calculator.js"></script>
+    <script src="common-nav.js"></script>
+    <script>
+        // Show/hide ceiling height input based on checkbox
+        document.getElementById('calculateCeiling').addEventListener('change', function() {
+            const ceilingHeightDiv = document.querySelector('.ceiling-height');
+            ceilingHeightDiv.style.display = this.checked ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

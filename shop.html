@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materials Shop - FurniCraft Pro</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="improved-nav.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Add Axios for API calls -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    .shop-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .shop-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .search-filter {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .search-filter input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 250px;
+    }
+    
+    .search-filter select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    
+    .product-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .product-info {
+      padding: 15px;
+    }
+    
+    .product-info h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    .product-description {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 15px;
+      height: 60px;
+      overflow: hidden;
+    }
+    
+    .product-price {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    
+    .best-price {
+      color: #e74c3c;
+    }
+    
+    .vendor-comparison {
+      margin-top: 15px;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+    
+    .vendor-comparison h4 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #333;
+    }
+    
+    .vendor-comparison ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .vendor-comparison li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+    
+    .vendor-name {
+      color: #333;
+    }
+    
+    .vendor-price {
+      font-weight: bold;
+    }
+    
+    .add-to-cart {
+      width: 100%;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .add-to-cart:hover {
+      background-color: #2980b9;
+    }
+    
+    .no-products {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px;
+      color: #666;
+      font-size: 18px;
+    }
+    
+    /* User Authentication Styles */
+    .auth-container {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      width: 300px;
+      display: none;
+    }
+    
+    .auth-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .auth-tab.active {
+      border-bottom: 2px solid #3498db;
+      color: #3498db;
+    }
+    
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .auth-form input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .auth-form button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .auth-form button:hover {
+      background-color: #2980b9;
+    }
+    
+    .auth-error {
+      color: #e74c3c;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    
+    .profile-view {
+      display: none;
+    }
+    
+    .profile-info {
+      margin-bottom: 15px;
+    }
+    
+    .profile-info p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    
+    .profile-info strong {
+      font-weight: bold;
+      color: #333;
+    }
+    
+    /* Vendor logo styles */
+    .vendor-logo {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 5px;
+      color: white;
+      font-size: 10px;
+    }
+    
+    .veligaa-logo {
+      background-color: #3498db;
+    }
+    
+    .sonee-logo {
+      background-color: #e74c3c;
+    }
+    
+    .alia-logo {
+      background-color: #2ecc71;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Common navigation will be inserted here by common-nav.js -->
+  </header>
+  
+  <div class="shop-container">
+    <div class="shop-header">
+      <h2>Materials Shop</h2>
+      <div class="user-auth">
+        <button id="auth-button" class="auth-button">
+          <span id="user-name">Sign In</span>
+          <i class="fas fa-user-circle"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="search-filter">
+      <input type="text" id="search-input" placeholder="Search products...">
+      <select id="category-filter">
+        <option value="all">All Categories</option>
+        <option value="wood">Wood</option>
+        <option value="hardware">Hardware</option>
+        <option value="tools">Tools</option>
+        <option value="fasteners">Fasteners</option>
+        <option value="paint">Paint</option>
+        <option value="safety">Safety Gear</option>
+      </select>
+      <select id="vendor-filter">
+        <option value="all">All Vendors</option>
+        <option value="Veligaa">Veligaa</option>
+        <option value="Sonee">Sonee</option>
+        <option value="Alia Hardware">Alia Hardware</option>
+      </select>
+      <select id="sort-filter">
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="name-asc">Name: A to Z</option>
+        <option value="name-desc">Name: Z to A</option>
+      </select>
+    </div>
+    
+    <div id="products-grid" class="products-grid">
+      <!-- Products will be loaded here -->
+      <div class="no-products">Loading products...</div>
+    </div>
+  </div>
+  
+  <!-- User Authentication Container -->
+  <div id="auth-container" class="auth-container">
+    <div class="auth-header">
+      <h3 id="auth-title">Sign In</h3>
+      <button id="auth-close"><i class="fas fa-times"></i></button>
+    </div>
+    
+    <div class="auth-tabs">
+      <div id="login-tab" class="auth-tab active">Login</div>
+      <div id="register-tab" class="auth-tab">Register</div>
+    </div>
+    
+    <div id="login-form" class="auth-form">
+      <input type="text" id="login-username" placeholder="Username">
+      <input type="password" id="login-password" placeholder="Password">
+      <button id="login-button">Sign In</button>
+      <div id="login-error" class="auth-error"></div>
+    </div>
+    
+    <div id="register-form" class="auth-form" style="display: none;">
+      <input type="text" id="register-name" placeholder="Full Name">
+      <input type="text" id="register-username" placeholder="Username">
+      <input type="email" id="register-email" placeholder="Email">
+      <input type="password" id="register-password" placeholder="Password">
+      <button id="register-button">Create Account</button>
+      <div id="register-error" class="auth-error"></div>
+    </div>
+    
+    <div id="profile-view" class="profile-view">
+      <div class="profile-info">
+        <p><strong>Name:</strong> <span id="profile-name"></span></p>
+        <p><strong>Username:</strong> <span id="profile-username"></span></p>
+        <p><strong>Email:</strong> <span id="profile-email"></span></p>
+      </div>
+      <button id="logout-button" class="auth-form-button">Logout</button>
+    </div>
+  </div>
+  
+  <script src="common-nav.js"></script>
+  <script>
+    // MongoDB API integration
+    let products = [];
+    let currentUser = null;
+    
+    // Fetch products from MongoDB API
+    async function fetchProducts() {
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        products = await response.json();
+        console.log('Products loaded from API:', products.length);
+        loadProducts(products);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        // Fallback to local data if API fails
+        console.log('Using fallback product data');
+        products = [
+          {
+            id: 1,
+            name: "Plywood Sheet - 18mm",
+            description: "High-quality marine-grade plywood, suitable for furniture and outdoor use",
+            category: "wood",
+            image: "assets/products/plywood.jpg",
+            vendors: [
+              { name: "Veligaa", price: 450.00 },
+              { name: "Sonee", price: 470.00 },
+              { name: "Alia Hardware", price: 460.00 }
+            ]
+          },
+          {
+            id: 2,
+            name: "MDF Sheet - 12mm",
+            description: "Medium-density fiberboard, ideal for interior furniture and cabinetry",
+            category: "wood",
+            image: "assets/products/mdf.jpg",
+            vendors: [
+              { name: "Veligaa", price: 380.00 },
+              { name: "Sonee", price: 360.00 },
+              { name: "Alia Hardware", price: 390.00 }
+            ]
+          },
+          {
+            id: 3,
+            name: "Wood Screws - 30mm (100pcs)",
+            description: "Stainless steel wood screws, rust-resistant for long-lasting furniture",
+            category: "fasteners",
+            image: "assets/products/screws.jpg",
+            vendors: [
+              { name: "Veligaa", price: 120.00 },
+              { name: "Sonee", price: 110.00 },
+              { name: "Alia Hardware", price: 105.00 }
+            ]
+          },
+          {
+            id: 4,
+            name: "Cabinet Hinges (10 pairs)",
+            description: "Soft-close cabinet hinges for smooth and silent door operation",
+            category: "hardware",
+            image: "assets/products/hinges.jpg",
+            vendors: [
+              { name: "Veligaa", price: 250.00 },
+              { name: "Sonee", price: 270.00 },
+              { name: "Alia Hardware", price: 240.00 }
+            ]
+          },
+          {
+            id: 5,
+            name: "Wood Glue - 500ml",
+            description: "Strong, waterproof wood adhesive for furniture assembly",
+            category: "tools",
+            image: "assets/products/glue.jpg",
+            vendors: [
+              { name: "Veligaa", price: 85.00 },
+              { name: "Sonee", price: 90.00 },
+              { name: "Alia Hardware", price: 80.00 }
+            ]
+          },
+          {
+            id: 6,
+            name: "Door Handles - Stainless Steel",
+            description: "Modern stainless steel handles for cabinets and drawers",
+            category: "hardware",
+            image: "assets/products/handles.jpg",
+            vendors: [
+              { name: "Veligaa", price: 150.00 },
+              { name: "Sonee", price: 145.00 },
+              { name: "Alia Hardware", price: 160.00 }
+            ]
+          }
+        ];
+        loadProducts(products);
+      }
+    }
+    
+    // Load products into the grid
+    function loadProducts(productsToShow) {
+      const productsGrid = document.getElementById('products-grid');
+      productsGrid.innerHTML = ''; // Clear existing products
+      
+      if (productsToShow.length === 0) {
+        productsGrid.innerHTML = '<div class="no-products">No products found matching your criteria</div>';
+        return;
+      }
+      
+      productsToShow.forEach(product => {
+        // Find the best price vendor
+        const bestVendor = product.vendors.reduce((best, current) => 
+          current.price < best.price ? current : best, product.vendors[0]);
+        
+        // Create product card
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        
+        // Create product image
+        const productImage = document.createElement('img');
+        productImage.src = product.image || 'assets/images/product-placeholder.jpg';
+        productImage.alt = product.name;
+        productCard.appendChild(productImage);
+        
+        // Create product info
+        const productInfo = document.createElement('div');
+        productInfo.className = 'product-info';
+        
+        // Product name
+        const productName = document.createElement('h3');
+        productName.textContent = product.name;
+        productInfo.appendChild(productName);
+        
+        // Product description
+        const productDesc = document.createElement('p');
+        productDesc.className = 'product-description';
+        productDesc.textContent = product.description;
+        productInfo.appendChild(productDesc);
+        
+        // Best price
+        const productPrice = document.createElement('div');
+        productPrice.className = 'product-price';
+        productPrice.innerHTML = `<span class="best-price">Best Price: MVR ${bestVendor.price.toFixed(2)}</span> at ${bestVendor.name}`;
+        productInfo.appendChild(productPrice);
+        
+        // Vendor comparison
+        const vendorComparison = document.createElement('div');
+        vendorComparison.className = 'vendor-comparison';
+        vendorComparison.innerHTML = '<h4>Compare Prices:</h4>';
+        
+        const vendorList = document.createElement('ul');
+        product.vendors.forEach(vendor => {
+          const vendorItem = document.createElement('li');
+          vendorItem.innerHTML = `<span class="vendor-name">${vendor.name}:</span> <span class="vendor-price">MVR ${vendor.price.toFixed(2)}</span>`;
+          vendorList.appendChild(vendorItem);
+        });
+        
+        vendorComparison.appendChild(vendorList);
+        productInfo.appendChild(vendorComparison);
+        
+        // Add to cart button
+        const addToCartBtn = document.createElement('button');
+        addToCartBtn.className = 'add-to-cart';
+        addToCartBtn.setAttribute('data-id', product.id);
+        addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+        productInfo.appendChild(addToCartBtn);
+        
+        productCard.appendChild(productInfo);
+        productsGrid.appendChild(productCard);
+      });
+    }
+    
+    // Set up event listeners for search and filters
+    function setupEventListeners() {
+      const searchInput = document.getElementById('search-input');
+      const categoryFilter = document.getElementById('category-filter');
+      const vendorFilter = document.getElementById('vendor-filter');
+      const sortFilter = document.getElementById('sort-filter');
+      
+      // Search functionality
+      searchInput.addEventListener('input', function() {
+        filterProducts();
+      });
+      
+      // Category filter
+      categoryFilter.addEventListener('change', function() {
+        filterProducts();
+      });
+      
+      // Vendor filter
+      vendorFilter.addEventListener('change', function() {
+        filterProducts();
+      });
+      
+      // Sort filter
+      sortFilter.addEventListener('change', function() {
+        filterProducts();
+      });
+      
+      // User authentication event listeners
+      const authButton = document.getElementById('auth-button');
+      const authContainer = document.getElementById('auth-container');
+      const authClose = document.getElementById('auth-close');
+      const loginTab = document.getElementById('login-tab');
+      const registerTab = document.getElementById('register-tab');
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const profileView = document.getElementById('profile-view');
+      const loginButton = document.getElementById('login-button');
+      const registerButton = document.getElementById('register-button');
+      const logoutButton = document.getElementById('logout-button');
+      
+      // Toggle auth container
+      authButton.addEventListener('click', function() {
+        authContainer.style.display = authContainer.style.display === 'none' ? 'block' : 'none';
+      });
+      
+      // Close auth container
+      authClose.addEventListener('click', function() {
+        authContainer.style.display = 'none';
+      });
+      
+      // Switch between login and register tabs
+      loginTab.addEventListener('click', function() {
+        loginTab.classList.add('active');
+        registerTab.classList.remove('active');
+        loginForm.style.display = 'flex';
+        registerForm.style.display = 'none';
+        profileView.style.display = 'none';
+        document.getElementById('auth-title').textContent = 'Sign In';
+      });
+      
+      registerTab.addEventListener('click', function() {
+        registerTab.classList.add('active');
+        loginTab.classList.remove('active');
+        registerForm.style.display = 'flex';
+        loginForm.style.display = 'none';
+        profileView.style.display = 'none';
+        document.getElementById('auth-title').textContent = 'Create Account';
+      });
+      
+      // Login form submission
+      loginButton.addEventListener('click', async function() {
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const errorElement = document.getElementById('login-error');
+        
+        if (!username || !password) {
+          errorElement.textContent = 'Please enter both username and password';
+          return;
+        }
+        
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            currentUser = data.user;
+            updateUserInterface();
+            authContainer.style.display = 'none';
+          } else {
+            errorElement.textContent = data.message || 'Invalid username or password';
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          errorElement.textContent = 'An error occurred during login';
+        }
+      });
+      
+      // Register form submission
+      registerButton.addEventListener('click', async function() {
+        const name = document.getElementById('register-name').value;
+        const username = document.getElementById('register-username').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const errorElement = document.getElementById('register-error');
+        
+        if (!name || !username || !email || !password) {
+          errorElement.textContent = 'Please fill in all fields';
+          return;
+        }
+        
+        try {
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, username, email, password, role: 'customer' })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            currentUser = data.user;
+            updateUserInterface();
+            authContainer.style.display = 'none';
+          } else {
+            errorElement.textContent = data.message || 'Registration failed';
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          errorElement.textContent = 'An error occurred during registration';
+        }
+      });
+      
+      // Logout button
+      logoutButton.addEventListener('click', async function() {
+        try {
+          await fetch('/api/auth/logout');
+          currentUser = null;
+          updateUserInterface();
+          authContainer.style.display = 'none';
+        } catch (error) {
+          console.error('Logout error:', error);
+        }
+      });
+      
+      // Add to cart buttons
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-to-cart')) {
+          const productId = e.target.getAttribute('data-id');
+          alert(`Product ID ${productId} added to cart!`);
+        }
+      });
+    }
+    
+    // Update user interface based on authentication status
+    function updateUserInterface() {
+      const userName = document.getElementById('user-name');
+      const loginTab = document.getElementById('login-tab');
+      const registerTab = document.getElementById('register-tab');
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const profileView = document.getElementById('profile-view');
+      const authTitle = document.getElementById('auth-title');
+      
+      if (currentUser) {
+        // User is logged in
+        userName.textContent = currentUser.name || currentUser.username;
+        loginTab.style.display = 'none';
+        registerTab.style.display = 'none';
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'none';
+        profileView.style.display = 'block';
+        authTitle.textContent = 'My Profile';
+        
+        // Update profile view
+        document.getElementById('profile-name').textContent = currentUser.name || 'N/A';
+        document.getElementById('profile-username').textContent = currentUser.username;
+        document.getElementById('profile-email').textContent = currentUser.email;
+      } else {
+        // User is not logged in
+        userName.textContent = 'Sign In';
+        loginTab.style.display = 'block';
+        registerTab.style.display = 'block';
+        loginTab.classList.add('active');
+        registerTab.classList.remove('active');
+        loginForm.style.display = 'flex';
+        registerForm.style.display = 'none';
+        profileView.style.display = 'none';
+        authTitle.textContent = 'Sign In';
+      }
+    }
+    
+    // Filter products based on search, category, vendor, and sort
+    function filterProducts() {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      const categoryValue = document.getElementById('category-filter').value;
+      const vendorValue = document.getElementById('vendor-filter').value;
+      const sortValue = document.getElementById('sort-filter').value;
+      
+      let filteredProducts = [...products];
+      
+      // Apply search filter
+      if (searchTerm) {
+        filteredProducts = filteredProducts.filter(product => 
+          product.name.toLowerCase().includes(searchTerm) || 
+          product.description.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Apply category filter
+      if (categoryValue !== 'all') {
+        filteredProducts = filteredProducts.filter(product => 
+          product.category === categoryValue
+        );
+      }
+      
+      // Apply vendor filter
+      if (vendorValue !== 'all') {
+        filteredProducts = filteredProducts.filter(product => 
+          product.vendors.some(vendor => vendor.name === vendorValue)
+        );
+      }
+      
+      // Apply sorting
+      if (sortValue === 'price-low') {
+        filteredProducts.sort((a, b) => {
+          const aPrice = Math.min(...a.vendors.map(v => v.price));
+          const bPrice = Math.min(...b.vendors.map(v => v.price));
+          return aPrice - bPrice;
+        });
+      } else if (sortValue === 'price-high') {
+        filteredProducts.sort((a, b) => {
+          const aPrice = Math.min(...a.vendors.map(v => v.price));
+          const bPrice = Math.min(...b.vendors.map(v => v.price));
+          return bPrice - aPrice;
+        });
+      } else if (sortValue === 'name-asc') {
+        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortValue === 'name-desc') {
+        filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+      }
+      
+      // Update the product display
+      loadProducts(filteredProducts);
+    }
+    
+    // Check if user is already logged in
+    async function checkAuthStatus() {
+      try {
+        const response = await fetch('/api/auth/user');
+        const data = await response.json();
+        
+        if (data.success && data.user) {
+          currentUser = data.user;
+          updateUserInterface();
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+      }
+    }
+    
+    // Initialize the page
+    async function initPage() {
+      try {
+        await fetchProducts();
+        await checkAuthStatus();
+        setupEventListeners();
+      } catch (error) {
+        console.error('Error initializing page:', error);
+        // If fetchProducts fails, use the fallback data
+        loadProducts(products);
+        setupEventListeners();
+      }
+    }
+    
+    // Start the initialization
+    initPage();
+  </script>
+  <script src="improved-nav.js"></script>
+</body>
+</html>

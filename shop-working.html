@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materials Shop - FurniCraft Pro</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="common-nav.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    .shop-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .shop-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .search-filter {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .search-filter input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 250px;
+    }
+    
+    .search-filter select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .product-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .product-image {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+      border-bottom: 1px solid #eee;
+      background-color: #f9f9f9;
+    }
+    
+    .product-info {
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .product-name {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    .product-description {
+      margin: 0 0 15px 0;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+    
+    .product-price {
+      font-weight: bold;
+      font-size: 22px;
+      color: #2980b9;
+      margin-bottom: 5px;
+    }
+    
+    .product-price .currency {
+      font-weight: normal;
+      font-size: 0.8em;
+      color: #666;
+      margin-right: 3px;
+    }
+    
+    .product-vendor {
+      font-size: 14px;
+      color: #7f8c8d;
+    }
+    
+    .vendor-comparison {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+      font-size: 13px;
+      flex-grow: 1;
+    }
+    
+    .vendor-price {
+      padding: 6px 10px;
+      border-radius: 4px;
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+      align-items: center;
+    }
+    
+    .vendor-price.best {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+    
+    .vendor-logo {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      vertical-align: middle;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .sonee-logo {
+      background-color: #e74c3c;
+    }
+    
+    .veligaa-logo {
+      background-color: #3498db;
+    }
+    
+    .alia-logo {
+      background-color: #2ecc71;
+    }
+    
+    .category-filter {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .category-btn {
+      padding: 8px 15px;
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .category-btn:hover {
+      background-color: #e9ecef;
+    }
+    
+    .category-btn.active {
+      background-color: #3498db;
+      color: white;
+      border-color: #3498db;
+    }
+    
+    .add-to-cart {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .add-to-cart:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Common navigation will be inserted here by common-nav.js -->
+  </header>
+  
+  <div class="page-title">
+    <h2>Materials Shop</h2>
+  </div>
+
+  <div class="shop-container">
+    <div class="shop-header">
+      <h2>Shop for Materials</h2>
+      <div class="search-filter">
+        <input type="text" id="search-input" placeholder="Search products...">
+        <select id="sort-by">
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A to Z</option>
+          <option value="name-desc">Name: Z to A</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="category-filter">
+      <button class="category-btn active" data-category="all">All Products</button>
+      <button class="category-btn" data-category="wood">Wood</button>
+      <button class="category-btn" data-category="hardware">Hardware</button>
+      <button class="category-btn" data-category="fasteners">Fasteners</button>
+      <button class="category-btn" data-category="tools">Tools</button>
+      <button class="category-btn" data-category="finishes">Finishes</button>
+      <button class="category-btn" data-category="furniture">Furniture</button>
+      <button class="category-btn" data-category="safety">Safety Gear</button>
+    </div>
+    
+    <div class="products-grid" id="products-grid">
+      <!-- Products will be loaded here -->
+    </div>
+  </div>
+
+  <script src="common-nav.js"></script>
+  <script>
+    // Product data from Maldivian suppliers
+    const products = [
+      // Alia Hardware Special Products
+      {
+        id: 101,
+        name: "Alia Premium Door Handles Set",
+        description: "High-quality stainless steel door handles with tropical climate protection. Exclusive to Alia Hardware.",
+        category: "hardware",
+        image: "https://m.media-amazon.com/images/I/71nJxZ9AUrL.jpg",
+        vendors: [
+          { name: "Alia Hardware", price: 350, logo: "alia-logo" },
+          { name: "Sonee Hardware", price: 395, logo: "sonee-logo" },
+          { name: "Veligaa Hardware", price: 380, logo: "veligaa-logo" }
+        ]
+      },
+      {
+        id: 102,
+        name: "Alia Tropical Wood Sealer",
+        description: "Special formula wood sealer designed for Maldivian climate. Protects against humidity and salt air.",
+        category: "finishes",
+        image: "https://m.media-amazon.com/images/I/71C5+xFzHsL._AC_UF1000,1000_QL80_.jpg",
+        vendors: [
+          { name: "Alia Hardware", price: 450, logo: "alia-logo" },
+          { name: "Sonee Hardware", price: 475, logo: "sonee-logo" },
+          { name: "Veligaa Hardware", price: 490, logo: "veligaa-logo" }
+        ]
+      },
+      {
+        id: 1,
+        name: "Finish Nails Assortment",
+        description: "Headless nails for hidden joints in fine furniture work. Various sizes from 3/4 inch to 2 inch lengths.",
+        category: "fasteners",
+        image: "https://m.media-amazon.com/images/I/71JDsZfKDlL._AC_UF1000,1000_QL80_.jpg",
+        vendors: [
+          { name: "Sonee Hardware", price: 125, logo: "sonee-logo" },
+          { name: "Veligaa Hardware", price: 135, logo: "veligaa-logo" },
+          { name: "Alia Hardware", price: 120, logo: "alia-logo" }
+        ]
+      },
+      {
+        id: 2,
+        name: "Wood Screws Assortment",
+        description: "Premium wood screws in various sizes from #4 x 1/2 inch to #12 x 3 inch. Perfect for all furniture assembly needs.",
+        category: "fasteners",
+        image: "https://m.media-amazon.com/images/I/81+PeODvVCL._AC_UF1000,1000_QL80_.jpg",
+        vendors: [
+          { name: "Sonee Hardware", price: 195, logo: "sonee-logo" },
+          { name: "Veligaa Hardware", price: 185, logo: "veligaa-logo" },
+          { name: "Alia Hardware", price: 210, logo: "alia-logo" }
+        ]
+      },
+      {
+        id: 3,
+        name: "Marine Plywood Sheet (4' x 8')",
+        description: "Premium quality marine plywood, water-resistant and perfect for furniture construction in humid environments.",
+        category: "wood",
+        image: "https://5.imimg.com/data5/SELLER/Default/2022/9/QL/OY/DP/26473382/marine-plywood-500x500.jpg",
+        vendors: [
+          { name: "Sonee Hardware", price: 1850, logo: "sonee-logo" },
+          { name: "Veligaa Hardware", price: 1795, logo: "veligaa-logo" },
+          { name: "Alia Hardware", price: 1899, logo: "alia-logo" }
+        ]
+      },
+      {
+        id: 4,
+        name: "MDF Board (4' x 8')",
+        description: "Medium-density fiberboard, ideal for furniture, cabinets, and shelving. Smooth surface for painting or laminating.",
+        category: "wood",
+        image: "https://5.imimg.com/data5/SELLER/Default/2021/12/QO/DV/BM/3823480/mdf-board-500x500.jpg",
+        vendors: [
+          { name: "Sonee Hardware", price: 1250, logo: "sonee-logo" },
+          { name: "Veligaa Hardware", price: 1195, logo: "veligaa-logo" },
+          { name: "Alia Hardware", price: 1275, logo: "alia-logo" }
+        ]
+      }
+    ];
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load initial products
+      loadProducts(products);
+      
+      // Set up event listeners
+      setupEventListeners();
+    });
+    
+    // Load products into the grid
+    function loadProducts(productsToShow) {
+      const productsGrid = document.getElementById('products-grid');
+      productsGrid.innerHTML = '';
+      
+      productsToShow.forEach(product => {
+        // Find best price vendor
+        const bestVendor = product.vendors.reduce((best, current) => 
+          current.price < best.price ? current : best, product.vendors[0]);
+        
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        
+        let vendorComparisonHTML = '';
+        product.vendors.forEach(vendor => {
+          const isBest = vendor.price === bestVendor.price;
+          vendorComparisonHTML += `
+            <div class="vendor-price ${isBest ? 'best' : ''}">
+              <div>
+                <div class="vendor-logo ${vendor.logo}"></div>
+                ${vendor.name}
+              </div>
+              <div><span class="currency">MVR</span>${vendor.price.toFixed(2)}</div>
+            </div>
+          `;
+        });
+        
+        productCard.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/300x200?text=Product+Image'">
+          <div class="product-info">
+            <h4 class="product-name">${product.name}</h4>
+            <p class="product-description">${product.description}</p>
+            <div class="vendor-comparison">
+              ${vendorComparisonHTML}
+            </div>
+            <div class="product-meta">
+              <div class="product-price"><span class="currency">MVR</span>${bestVendor.price.toFixed(2)}</div>
+              <div class="product-vendor">Best price at ${bestVendor.name}</div>
+            </div>
+            <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+          </div>
+        `;
+        
+        productsGrid.appendChild(productCard);
+      });
+    }
+    
+    // Set up event listeners
+    function setupEventListeners() {
+      // Category filter
+      const categoryButtons = document.querySelectorAll('.category-btn');
+      categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons
+          categoryButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // Filter products
+          const category = this.getAttribute('data-category');
+          let filteredProducts = products;
+          
+          if (category !== 'all') {
+            filteredProducts = products.filter(product => product.category === category);
+          }
+          
+          // Apply current search filter
+          const searchTerm = document.getElementById('search-input').value.toLowerCase();
+          if (searchTerm) {
+            filteredProducts = filteredProducts.filter(product => 
+              product.name.toLowerCase().includes(searchTerm) || 
+              product.description.toLowerCase().includes(searchTerm)
+            );
+          }
+          
+          // Load filtered products
+          loadProducts(filteredProducts);
+        });
+      });
+      
+      // Search input
+      const searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+        
+        // Filter by category first
+        let filteredProducts = products;
+        if (activeCategory !== 'all') {
+          filteredProducts = products.filter(product => product.category === activeCategory);
+        }
+        
+        // Then filter by search term
+        if (searchTerm) {
+          filteredProducts = filteredProducts.filter(product => 
+            product.name.toLowerCase().includes(searchTerm) || 
+            product.description.toLowerCase().includes(searchTerm)
+          );
+        }
+        
+        // Load filtered products
+        loadProducts(filteredProducts);
+      });
+      
+      // Sort dropdown
+      const sortBy = document.getElementById('sort-by');
+      sortBy.addEventListener('change', function() {
+        const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        
+        // Filter by category first
+        let filteredProducts = products;
+        if (activeCategory !== 'all') {
+          filteredProducts = products.filter(product => product.category === activeCategory);
+        }
+        
+        // Then filter by search term
+        if (searchTerm) {
+          filteredProducts = filteredProducts.filter(product => 
+            product.name.toLowerCase().includes(searchTerm) || 
+            product.description.toLowerCase().includes(searchTerm)
+          );
+        }
+        
+        // Sort products
+        const sortValue = this.value;
+        switch (sortValue) {
+          case 'price-asc':
+            filteredProducts.sort((a, b) => {
+              const aPrice = Math.min(...a.vendors.map(v => v.price));
+              const bPrice = Math.min(...b.vendors.map(v => v.price));
+              return aPrice - bPrice;
+            });
+            break;
+          case 'price-desc':
+            filteredProducts.sort((a, b) => {
+              const aPrice = Math.min(...a.vendors.map(v => v.price));
+              const bPrice = Math.min(...b.vendors.map(v => v.price));
+              return bPrice - aPrice;
+            });
+            break;
+          case 'name-asc':
+            filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+          case 'name-desc':
+            filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+            break;
+        }
+        
+        // Load sorted products
+        loadProducts(filteredProducts);
+      });
+      
+      // Add to cart buttons
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-to-cart')) {
+          const productId = parseInt(e.target.getAttribute('data-id'));
+          alert(`Product ID ${productId} added to cart!`);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

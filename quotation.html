@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotation</title>
+  <link rel="stylesheet" href="quotation.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Quotation</h1>
+    <form id="quotation-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" required>
+      <label for="address">Address:</label>
+      <input type="text" id="address" required>
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" required>
+      <button type="submit">Generate Quotation</button>
+    </form>
+    <div id="quotation-details" class="hidden">
+      <h2>Quotation Details</h2>
+      <p><strong>Company Name:</strong> Furniture Craft Pro</p>
+      <p><strong>Quotation Number:</strong> <span id="quotation-number"></span></p>
+      <p><strong>Name:</strong> <span id="quotation-name"></span></p>
+      <p><strong>Address:</strong> <span id="quotation-address"></span></p>
+      <p><strong>Phone:</strong> <span id="quotation-phone"></span></p>
+      <div id="quotation-items"></div>
+      <p><strong>Total Cost:</strong> $<span id="quotation-total"></span></p>
+    </div>
+  </div>
+
+  <script src="quotation.js"></script>
+</body>
+</html>

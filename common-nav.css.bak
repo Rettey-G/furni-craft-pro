@@ -1,0 +1,104 @@
+/* Common Navigation for FurniCraft Pro */
+
+/* Sticky Navigation */
+.sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 10px 0;
+    width: 100%;
+}
+
+/* Main Navigation */
+.main-nav {
+    background-color: #34495e;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.main-nav ul {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.main-nav li {
+    margin: 0;
+    padding: 0;
+}
+
+.main-nav a {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    padding: 15px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.main-nav a i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+.main-nav a:hover {
+    background-color: #2c3e50;
+}
+
+.main-nav a.active {
+    background-color: #2980b9;
+}
+
+.main-nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #f5f5f5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-nav ul {
+        flex-wrap: wrap;
+    }
+    
+    .main-nav a {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    
+    .main-nav a i {
+        margin-right: 5px;
+        font-size: 16px;
+    }
+}
+
+/* Font Awesome Icons */
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-home:before { content: "🏠"; }
+.fa-chair:before { content: "🪑"; }
+.fa-calculator:before { content: "🧮"; }
+.fa-ceiling:before { content: "🏗️"; }
+.fa-cube:before { content: "📐"; }
+.fa-shop:before { content: "🛒"; }

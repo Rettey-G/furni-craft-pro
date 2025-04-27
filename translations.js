@@ -3,6 +3,10 @@
 
 const translations = {
   en: {
+    about_us: "About Us",
+    contact: "Contact",
+    privacy: "Privacy Policy",
+    rights_reserved: "All rights reserved.",
     slogan: "Smart Design, Seamless Living",
     // Navigation
     "home": "Home",
@@ -145,6 +149,10 @@ const translations = {
     "bookshelf": "Bookshelf"
   },
   dv: {
+    about_us: "އައްޑަށް ބައްދަލު",
+    contact: "ގަނޑައިގެން",
+    privacy: "ޕްރައިވެސީ ޕޮލިސީ",
+    rights_reserved: "ހުރި އަދި ކަމަށް އަދި ރަނގަޅު އަދިއްކަން.",
     slogan: "ސްމާޓް ޑިޒައިން، ހައްދަދު ޖަމިލަށް",
     // Navigation
     "home": "މައި ޞަފްޙާ",

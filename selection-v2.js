@@ -24,6 +24,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Location Section
     const locationCards = document.querySelectorAll('.location-card');
     const nextToFurnitureBtn = document.getElementById('next-to-furniture');
+
+    // Ensure all location links work
+    locationCards.forEach(card => {
+        const location = card.getAttribute('data-location');
+        if (location && location !== 'office') {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                state.selectedLocation = location;
+                goToStep('furniture');
+                loadFurnitureOptions(location);
+            });
+        }
+        // Office will use the normal link navigation
+    });
     
     // Furniture Section
     const furnitureGrid = document.getElementById('furniture-grid');

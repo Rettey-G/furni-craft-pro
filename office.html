@@ -22,12 +22,25 @@
     // Simple example: Show all office furniture types from furnitureData
     const section = document.getElementById('office-furniture-section');
     const officeFurniture = furnitureData.office;
-    section.innerHTML = Object.keys(officeFurniture).map(type => `
-      <div class="furniture-card">
-        <h2>${type.replace('_',' ').toUpperCase()}</h2>
-        <button onclick="window.location.href='selection.html'">Back to Locations</button>
-      </div>
-    `).join('');
+    section.innerHTML = Object.keys(officeFurniture).map(type => {
+      // Get first image from the first size's first item
+      const firstSize = Object.keys(officeFurniture[type])[0];
+      const firstItem = officeFurniture[type][firstSize].items[0];
+      const imgSrc = firstItem && firstItem.image ? firstItem.image : 'assets/furniture/placeholder.jpg';
+      let detailsPage = '';
+      if (type === 'file_cabinet') detailsPage = 'office-file-cabinet.html';
+      else if (type === 'shoe_rack') detailsPage = 'office-shoe-rack.html';
+      else if (type === 'side_drawer') detailsPage = 'office-side-drawer.html';
+      else if (type === 'bookshelf') detailsPage = 'office-bookshelf.html';
+      return `
+        <a class="furniture-card-link" href="${detailsPage}">
+          <div class="furniture-card">
+            <img src="${imgSrc}" alt="${type}" class="furniture-card-img">
+            <h2>${type.replace('_',' ').toUpperCase()}</h2>
+          </div>
+        </a>
+      `;
+    }).join('') + '<button onclick="window.location.href=\'selection.html\'">Back to Locations</button>';
   </script>
   <script src="common-nav.js"></script>
   <script src="netlify.js"></script>

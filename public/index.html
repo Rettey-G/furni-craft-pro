@@ -215,6 +215,41 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* 3D Viewer Styles */
+        .furniture-3d-section {
+            padding: 40px 0;
+            background-color: #f2f7fb;
+            margin-bottom: 60px;
+        }
+        .furniture-viewer-container {
+            width: 100%;
+            height: 500px;
+            margin: 30px auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .viewer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #0077cc;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -294,6 +329,23 @@
         </div>
     </section>
 
+    <section class="furniture-3d-section">
+        <div class="container">
+            <h2 class="section-title">3D Furniture Visualization</h2>
+            <p style="text-align: center; margin-bottom: 30px;">Explore our furniture in interactive 3D to see every detail</p>
+            
+            <div class="viewer-controls">
+                <button id="chair-btn" class="btn btn-primary">Chair</button>
+                <button id="table-btn" class="btn btn-primary">Table</button>
+                <button id="bookshelf-btn" class="btn btn-primary">Bookshelf</button>
+            </div>
+            
+            <div id="furniture-viewer" class="furniture-viewer-container">
+                <!-- 3D viewer will be rendered here -->
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="container footer-content">
             <div class="footer-column">
@@ -337,5 +389,31 @@
             &copy; 2023 FurniCraft Pro. All rights reserved.
         </div>
     </footer>
+
+    <script type="module">
+        import { FurnitureViewer } from '/js/3d/furniture-viewer.js';
+        
+        // Initialize the 3D viewer when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Create a new furniture viewer instance
+            const viewer = new FurnitureViewer('furniture-viewer', {
+                backgroundColor: 0xf5f5f5,
+                defaultModelPath: '/models/default-furniture.glb'
+            });
+            
+            // Set up buttons to switch models
+            document.getElementById('chair-btn').addEventListener('click', () => {
+                viewer.setModelByPath('/models/chair.glb');
+            });
+            
+            document.getElementById('table-btn').addEventListener('click', () => {
+                viewer.setModelByPath('/models/table.glb');
+            });
+            
+            document.getElementById('bookshelf-btn').addEventListener('click', () => {
+                viewer.setModelByPath('/models/bookshelf.glb');
+            });
+        });
+    </script>
 </body>
 </html> 

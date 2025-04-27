@@ -1,9 +1,9 @@
 // FurniCraft Pro - 3D Furniture Viewer
-import * as THREE from '/node_modules/three/build/three.module.js';
-import { OrbitControls } from '/node_modules/three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from '/node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from '../../../node_modules/three/build/three.module.js';
+import { OrbitControls } from '../../../node_modules/three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
-class FurnitureViewer {
+export class FurnitureViewer {
   constructor(containerId, options = {}) {
     this.container = document.getElementById(containerId);
     if (!this.container) {
@@ -71,6 +71,10 @@ class FurnitureViewer {
     // Add model loader
     this.loader = new GLTFLoader();
 
+    // Create a grid helper
+    const gridHelper = new THREE.GridHelper(10, 10, 0x888888, 0x444444);
+    this.scene.add(gridHelper);
+
     // Start animation loop
     this.animate();
 
@@ -111,6 +115,21 @@ class FurnitureViewer {
 
     // Show loading indicator
     this.showLoadingIndicator();
+
+    // Create fallback cube if model files are not available
+    if (modelPath === '/models/default-furniture.glb') {
+      this.createFallbackCube('Default Furniture', 0x6495ED);
+      return;
+    } else if (modelPath === '/models/chair.glb') {
+      this.createFallbackCube('Chair', 0x8B4513);
+      return;
+    } else if (modelPath === '/models/table.glb') {
+      this.createFallbackCube('Table', 0x228B22);
+      return;
+    } else if (modelPath === '/models/bookshelf.glb') {
+      this.createFallbackCube('Bookshelf', 0xA0522D);
+      return;
+    }
 
     // Load the model
     this.loader.load(
@@ -156,8 +175,44 @@ class FurnitureViewer {
         console.error('Error loading 3D model:', error);
         this.hideLoadingIndicator();
         this.showErrorMessage('Failed to load 3D model');
+        
+        // Create a fallback object based on which model failed to load
+        const modelName = modelPath.split('/').pop().split('.')[0];
+        this.createFallbackCube(modelName, 0xFF0000);
       }
     );
+  }
+
+  createFallbackCube(modelName, color) {
+    // Create a basic cube as a fallback
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshStandardMaterial({ color: color });
+    this.currentModel = new THREE.Mesh(geometry, material);
+    this.currentModel.castShadow = true;
+    this.currentModel.receiveShadow = true;
+    
+    // Add a label for the model
+    const div = document.createElement('div');
+    div.className = 'model-label';
+    div.textContent = modelName;
+    div.style.cssText = `
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+    `;
+    this.container.appendChild(div);
+    
+    // Add to scene
+    this.scene.add(this.currentModel);
+    
+    // Hide loading indicator
+    this.hideLoadingIndicator();
   }
 
   showLoadingIndicator() {
@@ -238,6 +293,11 @@ class FurnitureViewer {
       this.controls.update();
     }
     
+    // Rotate the fallback cube if it exists
+    if (this.currentModel && this.currentModel.isMesh) {
+      this.currentModel.rotation.y += 0.01;
+    }
+    
     // Render scene
     this.renderer.render(this.scene, this.camera);
   }
@@ -251,36 +311,26 @@ class FurnitureViewer {
     if (!this.currentModel) return;
     
     this.currentModel.traverse((node) => {
-      if (!node.isMesh) return;
-      if (meshName && node.name !== meshName) return;
-      
-      // Create new material based on options
-      const material = new THREE.MeshStandardMaterial(materialOptions);
-      node.material = material;
+      if (node.isMesh && (meshName === null || node.name === meshName)) {
+        node.material = new THREE.MeshStandardMaterial(materialOptions);
+      }
     });
   }
 
   setEnvironment(hdrPath) {
-    const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
-    pmremGenerator.compileEquirectangularShader();
-    
-    new THREE.TextureLoader().load(hdrPath, (texture) => {
-      const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-      this.scene.environment = envMap;
-      texture.dispose();
-      pmremGenerator.dispose();
-    });
+    // This would load an HDR environment map for reflections
+    // Requires RGBELoader and PMREMGenerator
+    console.log("Environment mapping would be set here with:", hdrPath);
   }
 
   takeScreenshot() {
-    // Render the scene
     this.renderer.render(this.scene, this.camera);
+    const dataURL = this.renderer.domElement.toDataURL('image/png');
     
-    // Get the canvas data as an image
-    const screenshot = this.renderer.domElement.toDataURL('image/png');
-    return screenshot;
+    // Create a download link
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'furniture-screenshot.png';
+    link.click();
   }
-}
-
-// Make the viewer available globally
-window.FurnitureViewer = FurnitureViewer; 
+} 

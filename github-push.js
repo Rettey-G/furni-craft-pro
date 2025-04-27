@@ -8,7 +8,7 @@ const config = {
     repoName: 'FurniCraft-Pro',
     repoUrl: 'https://github.com/YOUR_USERNAME/FurniCraft-Pro.git', // Replace YOUR_USERNAME with your GitHub username
     defaultBranch: 'main',
-    commitMessage: 'Auto-push: Update application files'
+    commitMessage: 'Auto-push: Update application with 3D furniture visualization'
 };
 
 // Check if .git directory exists

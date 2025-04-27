@@ -1,17 +1,20 @@
 [build]
   publish = "."
-  command = "npm run build"
+  command = "echo 'No build step needed for static site'"
 
 [build.environment]
   NODE_VERSION = "18"
 
+# Redirect API requests to the backend
 [[redirects]]
   from = "/api/*"
   to = "https://furnicraft-pro-api.onrender.com/api/:splat"
   status = 200
   force = true
 
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false

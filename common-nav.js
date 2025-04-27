@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li><a href="2d-to-3d-v2.html" id="nav-2d-to-3d-v2"><i class="fas fa-cube"></i> <span data-i18n="2d_to_3d">2D to 3D</span></a></li>
                 <li><a href="shop.html" id="nav-shop"><i class="fas fa-shopping-cart"></i> <span data-i18n="shop">Shop</span></a></li>
                 <li><a href="wood-optimizer-v3.html" id="nav-wood-optimizer-v3"><i class="fas fa-cut"></i> <span data-i18n="wood_optimizer">Wood Optimizer</span></a></li>
+                <li class="language-switcher-item">
+                    <div class="language-switcher">
+                        <button onclick="LanguageSwitcher.setLanguage('en')" class="${localStorage.getItem('furnicraft-language') === 'en' || !localStorage.getItem('furnicraft-language') ? 'active' : ''}">English</button>
+                        <button onclick="LanguageSwitcher.setLanguage('dv')" class="${localStorage.getItem('furnicraft-language') === 'dv' ? 'active' : ''}">ދިވެހި</button>
+                    </div>
+                </li>
             </ul>
         </nav>
     </div>
@@ -57,4 +63,48 @@ document.addEventListener('DOMContentLoaded', function() {
     if (activeNavItem) {
         activeNavItem.classList.add('active');
     }
+    
+    // Add language switcher styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .language-switcher {
+            display: flex;
+            gap: 5px;
+            margin-left: 10px;
+        }
+        
+        .language-switcher button {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .language-switcher button.active {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        
+        .language-switcher button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .language-switcher button.active:hover {
+            background-color: #3e8e41;
+        }
+        
+        .language-switcher-item {
+            margin-left: auto;
+        }
+        
+        [dir="rtl"] .language-switcher-item {
+            margin-left: 0;
+            margin-right: auto;
+        }
+    `;
+    document.head.appendChild(style);
 });

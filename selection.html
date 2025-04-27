@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Furniture Selection</title>
+  <title data-i18n="furniture_selection">Furniture Selection</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="improved-nav.css">
   <link rel="stylesheet" href="selection.css">
@@ -15,75 +15,77 @@
   </header>
 
   <div class="container">
-    <h1>Furniture Builder</h1>
+    <h1 data-i18n="furniture_builder">Furniture Builder</h1>
 
     <!-- Location Selection -->
     <section id="location-section">
-      <h2>Choose Location</h2>
+      <h2 data-i18n="choose_location">Choose Location</h2>
       <div class="location-grid">
         <div class="location-card" data-location="office">
           <img src="assets/locations/office.jpg" alt="Office">
-          <p>Office</p>
+          <p data-i18n="office">Office</p>
         </div>
         <div class="location-card" data-location="bedroom">
           <img src="assets/locations/bedroom.jpg" alt="Bedroom">
-          <p>Bedroom</p>
+          <p data-i18n="bedroom">Bedroom</p>
         </div>
         <div class="location-card" data-location="kitchen">
           <img src="assets/locations/kitchen.jpg" alt="Kitchen">
-          <p>Kitchen</p>
+          <p data-i18n="kitchen">Kitchen</p>
         </div>
         <div class="location-card" data-location="living_room">
           <img src="assets/locations/living_room.jpg" alt="Living Room">
-          <p>Living Room</p>
+          <p data-i18n="living_room">Living Room</p>
         </div>
         <div class="location-card" data-location="restaurant">
           <img src="assets/locations/restaurant.jpg" alt="Restaurant">
-          <p>Restaurant</p>
+          <p data-i18n="restaurant">Restaurant</p>
         </div>
         <div class="location-card" data-location="lobby">
           <img src="assets/locations/lobby.jpg" alt="Lobby">
-          <p>Lobby</p>
+          <p data-i18n="lobby">Lobby</p>
         </div>
       </div>
     </section>
 
     <!-- Furniture Selection -->
     <section id="furniture-section" class="hidden">
-      <h2>Choose Furniture</h2>
+      <h2 data-i18n="choose_furniture">Choose Furniture</h2>
       <div class="furniture-grid"></div>
     </section>
 
     <!-- Size Selection -->
     <section id="size-section" class="hidden">
-      <h2>Choose Size</h2>
-      <p class="size-description">Select the size that best fits your space requirements:</p>
+      <h2 data-i18n="choose_size">Choose Size</h2>
+      <p class="size-description" data-i18n="select_size">Select the size that best fits your space requirements:</p>
       <div class="size-grid"></div>
     </section>
 
     <!-- Items Display -->
     <section id="items-section" class="hidden">
-      <h2>Materials Required</h2>
+      <h2 data-i18n="materials_required">Materials Required</h2>
       <div class="material-info">
-        <h3>Material Requirements</h3>
-        <p>Below is a detailed list of all materials needed for your selected furniture:</p>
+        <h3 data-i18n="material_requirements">Material Requirements</h3>
+        <p data-i18n="materials_description">Below is a detailed list of all materials needed for your selected furniture:</p>
       </div>
       <div class="items-grid"></div>
       <div class="action-buttons">
-        <button id="calculate-wood">Calculate Wood Sheets</button>
-        <button id="generate-quotation">Generate Quotation</button>
-        <button id="view-3d-model">View in 3D</button>
-        <button id="back-to-locations">Start Over</button>
+        <button id="calculate-wood" data-i18n="calculate_wood">Calculate Wood Sheets</button>
+        <button id="generate-quotation" data-i18n="generate_quotation">Generate Quotation</button>
+        <button id="view-3d-model" data-i18n="view_3d">View in 3D</button>
+        <button id="back-to-locations" data-i18n="start_over">Start Over</button>
       </div>
     </section>
 
     <!-- Selected Items Display -->
     <section id="selected-items-section" class="hidden">
-      <h2>Selected Items</h2>
+      <h2 data-i18n="selected_items">Selected Items</h2>
       <div class="selected-items-grid"></div>
     </section>
   </div>
 
+  <script src="translations.js"></script>
+  <script src="language-switcher.js"></script>
   <script src="improved-nav.js"></script>
   <script src="database.js"></script>
   <script src="script.js"></script>

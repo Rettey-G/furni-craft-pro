@@ -36,9 +36,21 @@ function showFurniture(location) {
     .map(
       (type) => {
         const displayType = type.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase());
+        // Check if we have a specific image for this furniture type, otherwise use a placeholder or the first item image
+        let imgSrc = `assets/furniture/${type}.jpg`;
+        
+        // Fallback to the first item image from the database if available
+        const firstSize = Object.keys(furnitureData[location][type])[0];
+        if (firstSize) {
+          const firstItem = furnitureData[location][type][firstSize].items[0];
+          if (firstItem && firstItem.image) {
+            imgSrc = firstItem.image;
+          }
+        }
+        
         return `
         <div class="furniture-card" data-furniture="${type}">
-          <img src="assets/furniture/${type}.jpg" alt="${displayType}">
+          <img src="${imgSrc}" alt="${displayType}">
           <p>${displayType}</p>
         </div>
       `;
@@ -73,9 +85,19 @@ function showSizes(location, furniture) {
     .map(
       (size) => {
         const dimensions = getSizeDimensions(location, furniture, size);
+        
+        // Get a representative image for this size
+        let imgSrc = `assets/sizes/${size}.jpg`;
+        
+        // Fallback to the first item image from the database if available
+        const firstItem = furnitureData[location][furniture][size].items[0];
+        if (firstItem && firstItem.image) {
+          imgSrc = firstItem.image;
+        }
+        
         return `
         <div class="size-card" data-size="${size}">
-          <img src="assets/sizes/${size}.jpg" alt="${size}">
+          <img src="${imgSrc}" alt="${size}">
           <p class="size-title">${size.toUpperCase()}</p>
           <p class="size-dimensions">${dimensions}</p>
         </div>
@@ -150,22 +172,41 @@ function showItems(location, furniture, size) {
   const itemsGrid = document.querySelector(".items-grid");
   itemsGrid.innerHTML = items
     .map(
-      (item) => `
-      <div class="item-card" data-item='${JSON.stringify(item)}'>
-        <img src="${item.image}" alt="${item.name}">
-        <h4>${item.name}</h4>
-        <p><strong>Material:</strong> ${item.wood !== "-" ? item.wood : "Hardware"}</p>
-        <p><strong>Size:</strong> ${item.size}</p>
-        <p><strong>Quantity:</strong> ${item.pieces}</p>
-        <p><strong>Price:</strong> ${item.price}</p>
-        <select class="item-option">
-          <option value="Standard">Standard Quality</option>
-          <option value="Premium">Premium Quality</option>
-          <option value="Economy">Economy Option</option>
-        </select>
-        <button class="add-to-selection">Add to Selection</button>
-      </div>
-    `
+      (item) => {
+        // Ensure the image URL is valid
+        let imgSrc = item.image;
+        
+        // If the image URL is a relative path to assets but the file doesn't exist, use a fallback
+        if (imgSrc.startsWith('assets/') && !imgSrc.includes('sonee.com.mv') && !imgSrc.includes('veligaa.com')) {
+          // Use a category-appropriate image from Sonee or Veligaa
+          if (item.wood !== "-" && item.wood.toLowerCase().includes('wood') || 
+              item.wood.toLowerCase().includes('plywood') || 
+              item.wood.toLowerCase().includes('mdf')) {
+            imgSrc = "https://sonee.com.mv/cdn/shop/products/WhatsAppImage2021-10-25at10.35.14AM_1_800x.jpg";
+          } else if (item.name.toLowerCase().includes('handle') || 
+                    item.name.toLowerCase().includes('hinge') || 
+                    item.name.toLowerCase().includes('screw')) {
+            imgSrc = "https://sonee.com.mv/cdn/shop/products/WhatsAppImage2021-10-25at10.35.14AM_1_800x.jpg";
+          }
+        }
+        
+        return `
+        <div class="item-card" data-item='${JSON.stringify(item)}'>
+          <img src="${imgSrc}" alt="${item.name}">
+          <h4>${item.name}</h4>
+          <p><strong>Material:</strong> ${item.wood !== "-" ? item.wood : "Hardware"}</p>
+          <p><strong>Size:</strong> ${item.size}</p>
+          <p><strong>Quantity:</strong> ${item.pieces}</p>
+          <p><strong>Price:</strong> ${item.price}</p>
+          <select class="item-option">
+            <option value="Standard">Standard Quality</option>
+            <option value="Premium">Premium Quality</option>
+            <option value="Economy">Economy Option</option>
+          </select>
+          <button class="add-to-selection">Add to Selection</button>
+        </div>
+      `;
+      }
     )
     .join("");
 

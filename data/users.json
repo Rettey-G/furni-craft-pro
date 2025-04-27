@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "username": "admin",
+    "password": "admin123",
+    "email": "admin@furnicraft.com",
+    "role": "admin",
+    "name": "Admin User",
+    "createdAt": "2025-04-27T08:02:06.394Z"
+  },
+  {
+    "username": "customer",
+    "password": "customer123",
+    "email": "customer@example.com",
+    "role": "customer",
+    "name": "Regular Customer",
+    "createdAt": "2025-04-27T08:02:06.394Z"
+  }
+]

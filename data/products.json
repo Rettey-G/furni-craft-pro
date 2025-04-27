@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "id": "eco-door-fg-1pl-white",
+    "name": "ECO-DOOR FIBER GLASS DOOR 1PL WHITE",
+    "description": "High-quality fiber glass door with 1 panel design, ideal for tropical climate",
+    "category": "doors",
+    "image": "https://veligaa.com/wp-content/uploads/2023/01/eco-door-fg-1pl.jpg",
+    "vendors": [
+      {
+        "name": "Veligaa Hardware",
+        "price": 3996,
+        "logo": "veligaa-logo"
+      },
+      {
+        "name": "Sonee Hardware",
+        "price": 4150,
+        "logo": "sonee-logo"
+      },
+      {
+        "name": "Alia Hardware",
+        "price": 4200,
+        "logo": "alia-logo"
+      }
+    ]
+  },
+  {
+    "id": "eco-door-fg-6p-white",
+    "name": "ECO-DOOR FIBER GLASS DOOR 6P WHITE",
+    "description": "Premium fiber glass door with 6 panel design, suitable for exterior use",
+    "category": "doors",
+    "image": "https://veligaa.com/wp-content/uploads/2023/01/eco-door-fg-6p.jpg",
+    "vendors": [
+      {
+        "name": "Veligaa Hardware",
+        "price": 4100,
+        "logo": "veligaa-logo"
+      },
+      {
+        "name": "Sonee Hardware",
+        "price": 4250,
+        "logo": "sonee-logo"
+      },
+      {
+        "name": "Alia Hardware",
+        "price": 4300,
+        "logo": "alia-logo"
+      }
+    ]
+  }
+]

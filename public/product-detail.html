@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FurniCraft Pro - Product Detail</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/3d-viewer.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2a2a2a;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: #0077cc;
+        }
+        .product-section {
+            display: flex;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        .product-media {
+            flex: 1;
+            min-width: 300px;
+        }
+        .product-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        .product-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #222;
+        }
+        .product-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .product-meta {
+            margin-bottom: 20px;
+        }
+        .price-label {
+            font-size: 16px;
+            color: #666;
+        }
+        .price-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0077cc;
+        }
+        .vendor-list {
+            margin-top: 30px;
+        }
+        .vendor-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+        }
+        .vendor-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-right: 15px;
+        }
+        .vendor-info {
+            flex-grow: 1;
+        }
+        .vendor-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .vendor-price {
+            color: #0077cc;
+            font-weight: bold;
+        }
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 16px;
+        }
+        .btn-primary {
+            background-color: #0077cc;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #0065ad;
+        }
+        .btn-secondary {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background-color: #e5e5e5;
+        }
+        .tabs {
+            margin-top: 40px;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            position: relative;
+        }
+        .tab-button.active {
+            color: #0077cc;
+        }
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0077cc;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .spec-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        .spec-table th, .spec-table td {
+            padding: 12px 10px;
+            text-align: left;
+        }
+        .spec-table th {
+            width: 200px;
+            color: #666;
+        }
+        .related-products {
+            margin: 60px 0;
+        }
+        .related-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .product-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .product-card-body {
+            padding: 15px;
+        }
+        .product-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .product-card-price {
+            color: #0077cc;
+            font-weight: bold;
+        }
+        .color-option-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0 10px;
+        }
+        .color-options-list {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .color-option.selected {
+            border-color: #0077cc;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 20px;
+        }
+        .footer-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover {
+            color: white;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            margin-top: 20px;
+            color: #999;
+        }
+        
+        @media (max-width: 768px) {
+            .product-section {
+                flex-direction: column;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">FurniCraft Pro</a>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/products.html">Products</a>
+                <a href="/calculator.html">Calculator</a>
+                <a href="/contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="product-section">
+            <div class="product-media">
+                <!-- 3D Viewer Container -->
+                <div id="furniture-viewer" class="furniture-3d-viewer"></div>
+                
+                <!-- 3D Controls -->
+                <div class="viewer-controls">
+                    <button id="rotate-left" title="Rotate Left">
+                        <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                    </button>
+                    <button id="zoom-in" title="Zoom In">
+                        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm2.5-4h-2v2H9v-2H7V9h2V7h1v2h2v1z"/></svg>
+                    </button>
+                    <button id="zoom-out" title="Zoom Out">
+                        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z"/></svg>
+                    </button>
+                    <button id="fullscreen" title="Fullscreen">
+                        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                    </button>
+                </div>
+                
+                <!-- Material/Color Options -->
+                <div class="color-options">
+                    <h4>Color Options</h4>
+                    <div class="color-swatches">
+                        <div class="color-swatch active" style="background-color: #A67D5D;" data-color="#A67D5D"></div>
+                        <div class="color-swatch" style="background-color: #593E25;" data-color="#593E25"></div>
+                        <div class="color-swatch" style="background-color: #DBCABC;" data-color="#DBCABC"></div>
+                        <div class="color-swatch" style="background-color: #2D241B;" data-color="#2D241B"></div>
+                        <div class="color-swatch" style="background-color: #8F7E78;" data-color="#8F7E78"></div>
+                    </div>
+                    
+                    <div class="texture-options">
+                        <h4>Material Type</h4>
+                        <div class="texture-swatches">
+                            <div class="texture-swatch active" style="background-image: url('/images/textures/wood.jpg');" data-texture="wood"></div>
+                            <div class="texture-swatch" style="background-image: url('/images/textures/metal.jpg');" data-texture="metal"></div>
+                            <div class="texture-swatch" style="background-image: url('/images/textures/fabric.jpg');" data-texture="fabric"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h1 class="product-title" id="product-title">ECO-DOOR FIBER GLASS DOOR 1PL WHITE</h1>
+                
+                <div class="product-description" id="product-description">
+                    High-quality fiber glass door with 1 panel design, ideal for tropical climate. This door is durable, weather-resistant, and provides excellent insulation.
+                </div>
+                
+                <div class="product-meta">
+                    <span class="price-label">Price from: </span>
+                    <span class="price-value" id="product-price">$3,996.00</span>
+                </div>
+                
+                <div class="color-option-title">Available Colors</div>
+                <div class="color-options-list">
+                    <div class="color-option selected" style="background-color: white;" title="White"></div>
+                    <div class="color-option" style="background-color: #8B4513;" title="Brown"></div>
+                    <div class="color-option" style="background-color: black;" title="Black"></div>
+                    <div class="color-option" style="background-color: #778899;" title="Gray"></div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Add to Project</button>
+                    <button class="btn btn-secondary">Save for Later</button>
+                </div>
+                
+                <div class="vendor-list">
+                    <h3>Available Vendors</h3>
+                    <div class="vendor-card">
+                        <img src="/images/vendors/veligaa-logo.png" alt="Veligaa Hardware" class="vendor-logo">
+                        <div class="vendor-info">
+                            <div class="vendor-name">Veligaa Hardware</div>
+                            <div class="vendor-price">$3,996.00</div>
+                        </div>
+                    </div>
+                    <div class="vendor-card">
+                        <img src="/images/vendors/sonee-logo.png" alt="Sonee Hardware" class="vendor-logo">
+                        <div class="vendor-info">
+                            <div class="vendor-name">Sonee Hardware</div>
+                            <div class="vendor-price">$4,150.00</div>
+                        </div>
+                    </div>
+                    <div class="vendor-card">
+                        <img src="/images/vendors/alia-logo.png" alt="Alia Hardware" class="vendor-logo">
+                        <div class="vendor-info">
+                            <div class="vendor-name">Alia Hardware</div>
+                            <div class="vendor-price">$4,200.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="specs">Specifications</button>
+                <button class="tab-button" data-tab="details">Details</button>
+                <button class="tab-button" data-tab="installation">Installation</button>
+                <button class="tab-button" data-tab="reviews">Reviews</button>
+            </div>
+            
+            <div id="specs" class="tab-content active">
+                <table class="spec-table">
+                    <tr>
+                        <th>Dimensions</th>
+                        <td>2032mm x 813mm x 40mm (H x W x D)</td>
+                    </tr>
+                    <tr>
+                        <th>Material</th>
+                        <td>Fiberglass with wooden core</td>
+                    </tr>
+                    <tr>
+                        <th>Weight</th>
+                        <td>28 kg</td>
+                    </tr>
+                    <tr>
+                        <th>Color</th>
+                        <td>White (Standard)</td>
+                    </tr>
+                    <tr>
+                        <th>Warranty</th>
+                        <td>5 years manufacturer warranty</td>
+                    </tr>
+                    <tr>
+                        <th>Design</th>
+                        <td>1 Panel</td>
+                    </tr>
+                    <tr>
+                        <th>R-Value</th>
+                        <td>R-7 (Excellent insulation)</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="details" class="tab-content">
+                <p>The ECO-DOOR FIBER GLASS DOOR 1PL WHITE is designed for durability and style. Key features include:</p>
+                <ul>
+                    <li>Weather-resistant fiberglass exterior that won't warp, rot, or delaminate</li>
+                    <li>Solid wood core for structural integrity</li>
+                    <li>Excellent thermal insulation properties</li>
+                    <li>UV-resistant finish to prevent fading</li>
+                    <li>Single panel classic design suitable for various architectural styles</li>
+                    <li>Pre-hung option available (frame and hinges sold separately)</li>
+                    <li>Compatible with standard lock sets and hardware</li>
+                </ul>
+            </div>
+            
+            <div id="installation" class="tab-content">
+                <p>Installation Guidelines:</p>
+                <ol>
+                    <li>Measure your existing door frame or rough opening</li>
+                    <li>Purchase the correct size door and necessary hardware</li>
+                    <li>Remove existing door if applicable</li>
+                    <li>Prepare the door frame ensuring it's level and plumb</li>
+                    <li>Install the door in the frame following manufacturer guidelines</li>
+                    <li>Secure with appropriate hinges and fasteners</li>
+                    <li>Install lock set and handle</li>
+                    <li>Seal gaps with appropriate weather stripping</li>
+                </ol>
+                <p><strong>Professional installation is recommended for optimal performance.</strong></p>
+            </div>
+            
+            <div id="reviews" class="tab-content">
+                <p>Customer Reviews coming soon.</p>
+            </div>
+        </div>
+        
+        <div class="related-products">
+            <h2 class="related-title">Related Products</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="https://veligaa.com/wp-content/uploads/2023/01/eco-door-fg-6p.jpg" alt="ECO-DOOR FIBER GLASS DOOR 6P WHITE" class="product-card-image">
+                    <div class="product-card-body">
+                        <h3 class="product-card-title">ECO-DOOR FIBER GLASS DOOR 6P WHITE</h3>
+                        <div class="product-card-price">$4,100.00</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://veligaa.com/wp-content/uploads/2023/01/Slailey-MAIN-2.jpg" alt="Solid Core Door" class="product-card-image">
+                    <div class="product-card-body">
+                        <h3 class="product-card-title">Solid Core Interior Door</h3>
+                        <div class="product-card-price">$2,400.00</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://www.homedepot.com/phsgraphics/BDC_Ply_Gem_MTL_V5.jpg" alt="Metal Entry Door" class="product-card-image">
+                    <div class="product-card-body">
+                        <h3 class="product-card-title">Steel Security Entry Door</h3>
+                        <div class="product-card-price">$5,200.00</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://www.homedepot.com/phsgraphics/BDC_Ply_Gem_Sliding_Patio_Door_V5.jpg" alt="Sliding Glass Door" class="product-card-image">
+                    <div class="product-card-body">
+                        <h3 class="product-card-title">Sliding Glass Patio Door</h3>
+                        <div class="product-card-price">$8,500.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-column">
+                <h3 class="footer-title">FurniCraft Pro</h3>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                    <li><a href="/careers.html">Careers</a></li>
+                    <li><a href="/blog.html">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Products</h3>
+                <ul class="footer-links">
+                    <li><a href="/products.html">All Products</a></li>
+                    <li><a href="/categories/doors.html">Doors</a></li>
+                    <li><a href="/categories/windows.html">Windows</a></li>
+                    <li><a href="/categories/furniture.html">Furniture</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Help</h3>
+                <ul class="footer-links">
+                    <li><a href="/faq.html">FAQ</a></li>
+                    <li><a href="/shipping.html">Shipping</a></li>
+                    <li><a href="/returns.html">Returns</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Connect</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container copyright">
+            &copy; 2023 FurniCraft Pro. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Load Three.js library -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "/node_modules/three/build/three.module.js",
+            "three/addons/": "/node_modules/three/examples/jsm/"
+        }
+    }
+    </script>
+    <script src="/js/3d/furniture-viewer.js" type="module"></script>
+    
+    <script>
+        // Initialize product data from API
+        async function loadProductData() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('id') || 'eco-door-fg-1pl-white';
+                
+                const response = await fetch(`/api/products/${productId}`);
+                if (!response.ok) {
+                    throw new Error('Product not found');
+                }
+                
+                const product = await response.json();
+                
+                // Update the product details on the page
+                document.getElementById('product-title').textContent = product.name;
+                document.getElementById('product-description').textContent = product.description;
+                
+                // Set the lowest price
+                const lowestPrice = Math.min(...product.vendors.map(v => v.price));
+                document.getElementById('product-price').textContent = `$${lowestPrice.toFixed(2)}`;
+                
+                // Update vendor list
+                const vendorList = document.querySelector('.vendor-list');
+                vendorList.innerHTML = '<h3>Available Vendors</h3>';
+                
+                product.vendors.forEach(vendor => {
+                    vendorList.innerHTML += `
+                        <div class="vendor-card">
+                            <img src="/images/vendors/${vendor.logo}.png" alt="${vendor.name}" class="vendor-logo">
+                            <div class="vendor-info">
+                                <div class="vendor-name">${vendor.name}</div>
+                                <div class="vendor-price">$${vendor.price.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                return product;
+            } catch (error) {
+                console.error('Error loading product data:', error);
+            }
+        }
+        
+        // Initialize 3D viewer when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load product data
+            const product = await loadProductData();
+            
+            // Initialize 3D viewer
+            const modelPath = `/models/${product?.id || 'eco-door-fg-1pl-white'}.glb`;
+            const viewer = new FurnitureViewer('furniture-viewer', {
+                defaultModelPath: modelPath,
+                backgroundColor: 0xf5f5f5
+            });
+            
+            // Handle viewer controls
+            document.getElementById('rotate-left').addEventListener('click', () => {
+                viewer.controls.autoRotate = !viewer.controls.autoRotate;
+            });
+            
+            document.getElementById('zoom-in').addEventListener('click', () => {
+                viewer.camera.position.multiplyScalar(0.9);
+            });
+            
+            document.getElementById('zoom-out').addEventListener('click', () => {
+                viewer.camera.position.multiplyScalar(1.1);
+            });
+            
+            document.getElementById('fullscreen').addEventListener('click', () => {
+                const viewerElement = document.getElementById('furniture-viewer');
+                viewerElement.classList.toggle('fullscreen');
+                viewer.onWindowResize();
+            });
+            
+            // Handle color swatches
+            const colorSwatches = document.querySelectorAll('.color-swatch');
+            colorSwatches.forEach(swatch => {
+                swatch.addEventListener('click', () => {
+                    // Remove active class from all swatches
+                    colorSwatches.forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked swatch
+                    swatch.classList.add('active');
+                    
+                    // Apply color to 3D model
+                    const color = swatch.getAttribute('data-color');
+                    viewer.applyMaterial({ color: color });
+                });
+            });
+            
+            // Handle texture swatches
+            const textureSwatches = document.querySelectorAll('.texture-swatch');
+            textureSwatches.forEach(swatch => {
+                swatch.addEventListener('click', () => {
+                    // Remove active class from all swatches
+                    textureSwatches.forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked swatch
+                    swatch.classList.add('active');
+                    
+                    // Apply texture to 3D model
+                    const textureType = swatch.getAttribute('data-texture');
+                    switch(textureType) {
+                        case 'wood':
+                            viewer.applyMaterial({ 
+                                roughness: 0.7,
+                                metalness: 0.1
+                            });
+                            break;
+                        case 'metal':
+                            viewer.applyMaterial({ 
+                                roughness: 0.2,
+                                metalness: 0.8
+                            });
+                            break;
+                        case 'fabric':
+                            viewer.applyMaterial({ 
+                                roughness: 0.9,
+                                metalness: 0
+                            });
+                            break;
+                    }
+                });
+            });
+            
+            // Tab navigation
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    button.classList.add('active');
+                    document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+                });
+            });
+            
+            // Color options for product
+            const colorOptions = document.querySelectorAll('.color-option');
+            colorOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    colorOptions.forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

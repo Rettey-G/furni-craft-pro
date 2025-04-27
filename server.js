@@ -7,9 +7,8 @@ const cors = require('cors');
 const session = require('express-session');
 require('dotenv').config();
 
-// Import MongoDB connection and data service
-const { connectToDatabase, closeConnection } = require('./mongodb-connect');
-const dataService = require('./mongo-data-service');
+// Import JSON data store and modules
+const dataStore = require('./data-store');
 const auth = require('./auth');
 const subscription = require('./subscription');
 
@@ -21,6 +20,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+// Expose node_modules/three for Three.js to work
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use(session({
   secret: 'furnicraft-secret',
   resave: false,
@@ -48,7 +49,7 @@ app.post('/api/logout', (req, res) => {
 // Product routes
 app.get('/api/products', async (req, res) => {
   try {
-    const products = await dataService.products.getAll();
+    const products = await dataStore.products.getAll();
     res.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -58,7 +59,7 @@ app.get('/api/products', async (req, res) => {
 
 app.get('/api/products/:id', async (req, res) => {
   try {
-    const product = await dataService.products.getById(req.params.id);
+    const product = await dataStore.products.getById(req.params.id);
     if (product) {
       res.json(product);
     } else {
@@ -72,7 +73,7 @@ app.get('/api/products/:id', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   try {
-    const newProduct = await dataService.products.create(req.body);
+    const newProduct = await dataStore.products.create(req.body);
     res.status(201).json(newProduct);
   } catch (error) {
     console.error('Error creating product:', error);
@@ -82,7 +83,7 @@ app.post('/api/products', async (req, res) => {
 
 app.put('/api/products/:id', async (req, res) => {
   try {
-    const updatedProduct = await dataService.products.update(req.params.id, req.body);
+    const updatedProduct = await dataStore.products.update(req.params.id, req.body);
     if (updatedProduct) {
       res.json(updatedProduct);
     } else {
@@ -96,7 +97,7 @@ app.put('/api/products/:id', async (req, res) => {
 
 app.delete('/api/products/:id', async (req, res) => {
   try {
-    const deleted = await dataService.products.delete(req.params.id);
+    const deleted = await dataStore.products.delete(req.params.id);
     if (deleted) {
       res.status(204).send();
     } else {
@@ -111,7 +112,7 @@ app.delete('/api/products/:id', async (req, res) => {
 // User routes
 app.get('/api/users', async (req, res) => {
   try {
-    const users = await dataService.users.getAll();
+    const users = await dataStore.users.getAll();
     res.json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -121,9 +122,10 @@ app.get('/api/users', async (req, res) => {
 
 app.get('/api/users/:username', async (req, res) => {
   try {
-    const user = await dataService.users.getByUsername(req.params.username);
+    const user = await dataStore.users.getByUsername(req.params.username);
     if (user) {
-      res.json(user);
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
     } else {
       res.status(404).json({ error: 'User not found' });
     }
@@ -135,8 +137,12 @@ app.get('/api/users/:username', async (req, res) => {
 
 app.post('/api/users', async (req, res) => {
   try {
-    const newUser = await dataService.users.create(req.body);
-    res.status(201).json(newUser);
+    const result = await auth.registerUser(req.body);
+    if (result.success) {
+      res.status(201).json(result.user);
+    } else {
+      res.status(400).json({ error: result.message });
+    }
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Failed to create user' });
@@ -145,9 +151,10 @@ app.post('/api/users', async (req, res) => {
 
 app.put('/api/users/:username', async (req, res) => {
   try {
-    const updatedUser = await dataService.users.update(req.params.username, req.body);
+    const updatedUser = await dataStore.users.update(req.params.username, req.body);
     if (updatedUser) {
-      res.json(updatedUser);
+      const { password, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
     } else {
       res.status(404).json({ error: 'User not found' });
     }
@@ -159,7 +166,7 @@ app.put('/api/users/:username', async (req, res) => {
 
 app.delete('/api/users/:username', async (req, res) => {
   try {
-    const deleted = await dataService.users.delete(req.params.username);
+    const deleted = await dataStore.users.delete(req.params.username);
     if (deleted) {
       res.status(204).send();
     } else {
@@ -171,108 +178,43 @@ app.delete('/api/users/:username', async (req, res) => {
   }
 });
 
-// Order routes
-app.get('/api/orders', async (req, res) => {
+// Subscription routes
+app.get('/api/subscription/tiers', (req, res) => {
+  const tiers = subscription.getSubscriptionTiers();
+  res.json(tiers);
+});
+
+app.get('/api/subscription/user/:userId', async (req, res) => {
   try {
-    const orders = await dataService.orders.getAll();
-    res.json(orders);
+    const userSubscription = await subscription.getUserSubscription(req.params.userId);
+    res.json(userSubscription);
   } catch (error) {
-    console.error('Error fetching orders:', error);
-    res.status(500).json({ error: 'Failed to fetch orders' });
+    console.error('Error getting subscription:', error);
+    res.status(500).json({ error: 'Failed to get subscription' });
   }
 });
 
-app.get('/api/orders/:id', async (req, res) => {
+app.post('/api/subscription/update', async (req, res) => {
   try {
-    const order = await dataService.orders.getById(req.params.id);
-    if (order) {
-      res.json(order);
-    } else {
-      res.status(404).json({ error: 'Order not found' });
+    const { userId, tier } = req.body;
+    if (!userId || !tier) {
+      return res.status(400).json({ error: 'User ID and tier are required' });
     }
+    const updated = await subscription.updateUserSubscription(userId, tier);
+    res.json(updated);
   } catch (error) {
-    console.error('Error fetching order:', error);
-    res.status(500).json({ error: 'Failed to fetch order' });
+    console.error('Error updating subscription:', error);
+    res.status(500).json({ error: 'Failed to update subscription' });
   }
 });
 
-app.get('/api/users/:userId/orders', async (req, res) => {
-  try {
-    const orders = await dataService.orders.getByUserId(req.params.userId);
-    res.json(orders);
-  } catch (error) {
-    console.error('Error fetching user orders:', error);
-    res.status(500).json({ error: 'Failed to fetch user orders' });
-  }
+// Fallback route to serve the single page application
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
-app.post('/api/orders', async (req, res) => {
-  try {
-    const newOrder = await dataService.orders.create(req.body);
-    res.status(201).json(newOrder);
-  } catch (error) {
-    console.error('Error creating order:', error);
-    res.status(500).json({ error: 'Failed to create order' });
-  }
-});
-
-app.put('/api/orders/:id', async (req, res) => {
-  try {
-    const updatedOrder = await dataService.orders.update(req.params.id, req.body);
-    if (updatedOrder) {
-      res.json(updatedOrder);
-    } else {
-      res.status(404).json({ error: 'Order not found' });
-    }
-  } catch (error) {
-    console.error('Error updating order:', error);
-    res.status(500).json({ error: 'Failed to update order' });
-  }
-});
-
-app.delete('/api/orders/:id', async (req, res) => {
-  try {
-    const deleted = await dataService.orders.delete(req.params.id);
-    if (deleted) {
-      res.status(204).send();
-    } else {
-      res.status(404).json({ error: 'Order not found' });
-    }
-  } catch (error) {
-    console.error('Error deleting order:', error);
-    res.status(500).json({ error: 'Failed to delete order' });
-  }
-});
-
-// Database connection and server startup
-async function startServer() {
-  try {
-    // Connect to MongoDB
-    await connectToDatabase();
-    
-    // Start the server
-    app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}/`);
-      console.log(`Press Ctrl+C to stop the server`);
-    });
-    
-    // Handle graceful shutdown
-    process.on('SIGINT', async () => {
-      console.log('Shutting down server...');
-      await closeConnection();
-      process.exit(0);
-    });
-    
-    process.on('SIGTERM', async () => {
-      console.log('Shutting down server...');
-      await closeConnection();
-      process.exit(0);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-}
 
 // Start the server
-startServer();
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}/`);
+  console.log(`Press Ctrl+C to stop the server`);
+});

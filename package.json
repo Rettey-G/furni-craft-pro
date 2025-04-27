@@ -10,7 +10,7 @@
     "build": "echo 'Building for Netlify deployment' && npm install",
     "deploy:render": "echo 'Deploying to Render via GitHub integration'",
     "deploy:netlify": "echo 'Deploying to Netlify via GitHub integration'",
-    "seed": "node seed-mongodb.js"
+    "push": "node github-push.js"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
@@ -18,8 +18,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
-    "mongodb": "^6.3.0",
-    "mongoose": "^8.0.3",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "three": "^0.158.0"
   }
 }

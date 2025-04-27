@@ -52,13 +52,10 @@ async function registerUser(userData) {
 }
 
 // Function to get user profile
-async function getUserProfile(userId) {
+async function getUserProfile(username) {
   try {
-    // Get the users collection
-    const usersCollection = await dbConnect.getCollection(config.COLLECTIONS.USERS);
-    
     // Find the user
-    const user = await usersCollection.findOne({ _id: userId });
+    const user = await dataStore.users.getByUsername(username);
     
     if (user) {
       // Create a user object without the password
@@ -74,19 +71,15 @@ async function getUserProfile(userId) {
 }
 
 // Function to update user profile
-async function updateUserProfile(userId, userData) {
+async function updateUserProfile(username, userData) {
   try {
-    // Get the users collection
-    const usersCollection = await dbConnect.getCollection(config.COLLECTIONS.USERS);
-    
     // Update the user
-    const result = await usersCollection.updateOne(
-      { _id: userId },
-      { $set: userData }
-    );
+    const updatedUser = await dataStore.users.update(username, userData);
     
-    if (result.modifiedCount > 0) {
-      return { success: true, message: 'Profile updated successfully' };
+    if (updatedUser) {
+      // Create a user object without the password
+      const { password, ...userWithoutPassword } = updatedUser;
+      return { success: true, user: userWithoutPassword };
     }
     
     return { success: false, message: 'Failed to update profile' };

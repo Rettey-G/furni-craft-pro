@@ -1,12 +1,15 @@
 // Enhanced 3D Viewer for FurniCraft Pro
-// This script extends the functionality of the original 3d-viewer.js with improved rendering
+// This is a standalone script for improved 3D rendering
 
-// Store original initialization function
-const originalInit = window.init || function() {};
-const originalCreateBasicFurnitureModel = window.createBasicFurnitureModel || function() {};
+// Global variables
+let scene, camera, renderer, controls;
+let roomWidth = 4, roomLength = 5, roomHeight = 2.5;
+let wireframeMode = false;
+let measurementLabels = [];
+let furniture = [];
 
-// Override the initialization function
-window.init = function() {
+// Initialize the 3D viewer
+function init() {
   // Create scene
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf0f0f0);
@@ -313,5 +316,109 @@ window.createBasicFurnitureModel = function(furnitureType, size) {
   return group;
 };
 
-// Add this script to the page after the original 3d-viewer.js has loaded
+// Initialize the viewer when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Check if the 3D viewer canvas exists
+  if (document.getElementById('3d-viewer')) {
+    init();
+    animate();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', onWindowResize, false);
+    
+    // Add event listener for wireframe toggle
+    const wireframeToggle = document.getElementById('wireframe-toggle');
+    if (wireframeToggle) {
+      wireframeToggle.addEventListener('click', toggleWireframe);
+    }
+    
+    console.log('Enhanced 3D viewer initialized');
+  }
+});
+
+// Animation loop
+function animate() {
+  requestAnimationFrame(animate);
+  
+  // Update controls
+  if (controls) {
+    controls.update();
+  }
+  
+  // Render scene
+  if (scene && camera && renderer) {
+    renderer.render(scene, camera);
+  }
+}
+
+// Handle window resize
+function onWindowResize() {
+  if (camera && renderer) {
+    camera.aspect = document.querySelector('.canvas-container').clientWidth / 
+                   document.querySelector('.canvas-container').clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(document.querySelector('.canvas-container').clientWidth, 
+                   document.querySelector('.canvas-container').clientHeight);
+  }
+}
+
+// Toggle wireframe mode
+function toggleWireframe() {
+  wireframeMode = !wireframeMode;
+  
+  scene.traverse(function(object) {
+    if (object.isMesh) {
+      object.material.wireframe = wireframeMode;
+    }
+  });
+}
+
+// Update room dimensions
+function updateRoomDimensions(width, length, height) {
+  roomWidth = width;
+  roomLength = length;
+  roomHeight = height;
+  
+  // Clear existing room
+  clearRoom();
+  
+  // Create new room with updated dimensions
+  createEnhancedRoom();
+  createEnhancedFloor();
+}
+
+// Clear the room
+function clearRoom() {
+  // Remove all objects except lights
+  const objectsToRemove = [];
+  
+  scene.traverse(function(object) {
+    if (object.isMesh && !object.isLight) {
+      objectsToRemove.push(object);
+    }
+  });
+  
+  objectsToRemove.forEach(function(object) {
+    scene.remove(object);
+  });
+  
+  // Clear furniture array
+  furniture = [];
+  
+  // Clear measurement labels
+  measurementLabels.forEach(function(label) {
+    document.body.removeChild(label);
+  });
+  measurementLabels = [];
+}
+
+// Add furniture to the room
+function addFurniture(type, width, length, height, x, y, z) {
+  const model = createBasicFurnitureModel(type, { width, length, height });
+  model.position.set(x, y, z);
+  scene.add(model);
+  furniture.push(model);
+  return model;
+}
+
 console.log('Enhanced 3D viewer loaded');

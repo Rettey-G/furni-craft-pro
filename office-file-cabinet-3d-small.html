@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Cabinet (Small) 3D View - FurniCraft Pro</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="common-nav.css">
+  <link rel="stylesheet" href="selection.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>.three-d-container { max-width: 900px; margin: 0 auto; padding: 2rem; } #cabinet-3d-viewer { width: 100%; height: 500px; background: #f7f7f7; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); } .action-buttons { text-align: center; margin-top: 2rem; }</style>
+</head>
+<body>
+  <header></header>
+  <div class="container three-d-container">
+    <h1>File Cabinet (Small) 3D Visualization</h1>
+    <div id="cabinet-3d-viewer"></div>
+    <div class="action-buttons">
+      <a href="office-file-cabinet.html" class="button btn-secondary"><i class="fas fa-arrow-left"></i> Back to Details</a>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+  <script>
+  // 3D for File Cabinet (Small)
+  const container = document.getElementById('cabinet-3d-viewer');
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xf0f0f0);
+  const camera = new THREE.PerspectiveCamera(50, container.clientWidth / 500, 0.1, 1000);
+  camera.position.set(120, 120, 220);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(container.clientWidth, 500);
+  container.appendChild(renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.2;
+
+  // Lighting
+  const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+  scene.add(ambient);
+  const dir = new THREE.DirectionalLight(0xffffff, 0.6);
+  dir.position.set(100,200,100);
+  scene.add(dir);
+
+  // Cabinet body
+  const bodyGeo = new THREE.BoxGeometry(40, 70, 50);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0xcccccc });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.set(0, 35, 0);
+  scene.add(body);
+
+  // Drawers (2)
+  for(let i=0;i<2;i++){
+    const drawerGeo = new THREE.BoxGeometry(35, 15, 45);
+    const drawerMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    const drawer = new THREE.Mesh(drawerGeo, drawerMat);
+    drawer.position.set(0, 7.5 + i*20, 0);
+    scene.add(drawer);
+  }
+
+  // Handles
+  for(let i=0;i<2;i++){
+    const handleGeo = new THREE.CylinderGeometry(1,1,10,16);
+    const handleMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    const handle = new THREE.Mesh(handleGeo, handleMat);
+    handle.rotation.z = Math.PI/2;
+    handle.position.set(18, 7.5 + i*20, 20);
+    scene.add(handle);
+  }
+
+  // Lock
+  const lockGeo = new THREE.CylinderGeometry(2,2,2,16);
+  const lockMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
+  const lock = new THREE.Mesh(lockGeo, lockMat);
+  lock.position.set(-15, 55, 25);
+  scene.add(lock);
+
+  function animate(){
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+  </script>
+  <script src="common-nav.js"></script>
+</body>
+</html>

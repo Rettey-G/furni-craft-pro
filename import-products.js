@@ -1,5 +1,5 @@
 // Import products to MongoDB
-const dbConnect = require('./db-connect');
+const { connectToDatabase, closeConnection } = require('./mongodb-connect');
 const config = require('./db-config');
 
 // Parse the product data from the images
@@ -293,31 +293,32 @@ function ensureThreeVendors(productsArray) {
 // Function to import products to MongoDB
 async function importProducts() {
   try {
-    // Connect to MongoDB
-    await dbConnect.connectToDatabase();
+    console.log('Connecting to MongoDB...');
+    const { db, client, collections } = await connectToDatabase();
     
     // Get the products collection
-    const productsCollection = await dbConnect.getCollection(config.COLLECTIONS.PRODUCTS);
+    const productsCollection = collections.products;
     
     // Check if products already exist
     const existingProducts = await productsCollection.countDocuments();
     if (existingProducts > 0) {
       console.log(`${existingProducts} products already exist in the database.`);
-      console.log('Deleting existing products...');
-      await productsCollection.deleteMany({});
+      console.log('Deleting existing products with vendor Veligaa and Alia...');
+      await productsCollection.deleteMany({ vendor: { $in: ['Veligaa Hardware', 'Alia Hardware'] } });
     }
     
     // Ensure all products have three Maldivian vendors
     const productsWithThreeVendors = ensureThreeVendors(products);
     
     // Insert products
-    const result = await dbConnect.insertDocuments(config.COLLECTIONS.PRODUCTS, productsWithThreeVendors);
+    const result = await productsCollection.insertMany(productsWithThreeVendors);
     console.log(`${result.insertedCount} products imported successfully.`);
     
     // Close the connection
-    await dbConnect.closeConnection();
+    await closeConnection();
   } catch (error) {
     console.error('Error importing products:', error);
+    await closeConnection();
   }
 }
 
@@ -344,28 +345,29 @@ const users = [
 // Function to import users to MongoDB
 async function importUsers() {
   try {
-    // Connect to MongoDB
-    await dbConnect.connectToDatabase();
+    console.log('Connecting to MongoDB for users import...');
+    const { db, client, collections } = await connectToDatabase();
     
     // Get the users collection
-    const usersCollection = await dbConnect.getCollection(config.COLLECTIONS.USERS);
+    const usersCollection = collections.users;
     
     // Check if users already exist
     const existingUsers = await usersCollection.countDocuments();
     if (existingUsers > 0) {
       console.log(`${existingUsers} users already exist in the database.`);
-      console.log('Deleting existing users...');
-      await usersCollection.deleteMany({});
+      // We'll keep existing users
+      console.log('Keeping existing users...');
+    } else {
+      // Insert users only if none exist
+      const result = await usersCollection.insertMany(users);
+      console.log(`${result.insertedCount} users imported successfully.`);
     }
     
-    // Insert users
-    const result = await dbConnect.insertDocuments(config.COLLECTIONS.USERS, users);
-    console.log(`${result.insertedCount} users imported successfully.`);
-    
     // Close the connection
-    await dbConnect.closeConnection();
+    await closeConnection();
   } catch (error) {
     console.error('Error importing users:', error);
+    await closeConnection();
   }
 }
 

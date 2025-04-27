@@ -130,50 +130,50 @@
     </header>
     
     <div class="page-title">
-        <h2>Room Calculator</h2>
+        <h2 data-i18n="room_calculator">Room Calculator</h2>
     </div>
     
     <div class="calculator-container">
         <div class="calculator-grid">
             <div class="calculator-form">
-                <h3>Room & Furniture Calculator</h3>
-                <p>Enter your room dimensions to get furniture recommendations and material calculations.</p>
+                <h3 data-i18n="room_furniture_calculator">Room & Furniture Calculator</h3>
+                <p data-i18n="enter_room_dimensions">Enter your room dimensions to get furniture recommendations and material calculations.</p>
                 
                 <form id="roomCalculatorForm">
                     <div class="form-group">
-                        <label for="roomType">Room Type:</label>
+                        <label for="roomType" data-i18n="room_type">Room Type:</label>
                         <select id="roomType" required>
-                            <option value="">Select a room type</option>
-                            <option value="kitchen">Kitchen</option>
-                            <option value="living_room">Living Room</option>
-                            <option value="bedroom">Bedroom</option>
-                            <option value="office">Office</option>
-                            <option value="restaurant">Restaurant</option>
-                            <option value="lobby">Lobby</option>
+                            <option value="" data-i18n="select_room_type">Select a room type</option>
+                            <option value="kitchen" data-i18n="kitchen">Kitchen</option>
+                            <option value="living_room" data-i18n="living_room">Living Room</option>
+                            <option value="bedroom" data-i18n="bedroom">Bedroom</option>
+                            <option value="office" data-i18n="office">Office</option>
+                            <option value="restaurant" data-i18n="restaurant">Restaurant</option>
+                            <option value="lobby" data-i18n="lobby">Lobby</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="roomLength">Room Length (meters):</label>
+                        <label for="roomLength" data-i18n="room_length">Room Length (meters):</label>
                         <input type="number" id="roomLength" min="1" step="0.1" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="roomWidth">Room Width (meters):</label>
+                        <label for="roomWidth" data-i18n="room_width">Room Width (meters):</label>
                         <input type="number" id="roomWidth" min="1" step="0.1" required>
                     </div>
                     
                     <div class="checkbox-group">
                         <input type="checkbox" id="calculateCeiling">
-                        <label for="calculateCeiling">Calculate ceiling materials</label>
+                        <label for="calculateCeiling" data-i18n="calculate_ceiling">Calculate ceiling materials</label>
                     </div>
                     
                     <div class="form-group ceiling-height" style="display: none;">
-                        <label for="ceilingHeight">Ceiling Height (meters):</label>
+                        <label for="ceilingHeight" data-i18n="ceiling_height">Ceiling Height (meters):</label>
                         <input type="number" id="ceilingHeight" min="1" step="0.1" value="2.4">
                     </div>
                     
-                    <button type="submit">Calculate</button>
+                    <button type="submit" data-i18n="calculate">Calculate</button>
                 </form>
             </div>
             
@@ -187,19 +187,19 @@
                 </div>
                 
                 <div id="3d-view-container" style="display: none;">
-                    <h3>3D Furniture Preview</h3>
+                    <h3 data-i18n="3d_furniture_preview">3D Furniture Preview</h3>
                     <div class="canvas-container" style="height: 500px; position: relative; margin-top: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                        <div id="loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(255,255,255,0.8); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;">Loading 3D Models...</div>
+                        <div id="loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(255,255,255,0.8); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;" data-i18n="loading_3d_models">Loading 3D Models...</div>
                         <canvas id="3d-viewer" style="width: 100%; height: 100%;"></canvas>
                         <div class="controls-info" style="position: absolute; bottom: 15px; left: 15px; font-size: 14px; color: #fff; background-color: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 4px;">
-                            <p style="margin: 0;">Left click + drag: Rotate | Right click + drag: Pan | Scroll: Zoom</p>
+                            <p style="margin: 0;" data-i18n="controls_info">Left click + drag: Rotate | Right click + drag: Pan | Scroll: Zoom</p>
                         </div>
                     </div>
                     <div class="furniture-controls" style="margin-top: 15px; display: flex; justify-content: center; gap: 15px;">
                         <div class="controls" style="display: flex; gap: 15px;">
-                            <button id="toggle-wireframe" class="control-button"><i class="fas fa-cubes"></i> Toggle Wireframe</button>
-                            <button id="toggle-measurements" class="control-button"><i class="fas fa-ruler"></i> Show Measurements</button>
-                            <button id="reset-camera" class="control-button"><i class="fas fa-sync"></i> Reset View</button>
+                            <button id="toggle-wireframe" class="control-button"><i class="fas fa-cubes"></i> <span data-i18n="toggle_wireframe">Toggle Wireframe</span></button>
+                            <button id="toggle-measurements" class="control-button"><i class="fas fa-ruler"></i> <span data-i18n="show_measurements">Show Measurements</span></button>
+                            <button id="reset-camera" class="control-button"><i class="fas fa-sync"></i> <span data-i18n="reset_camera">Reset Camera</span></button>
                             <!-- Maldivian Theme button will be added here by JavaScript -->
                         </div>
                     </div>
@@ -216,8 +216,11 @@
         </div>
     </div>
     
+    <script src="translations.js"></script>
+    <script src="language-switcher.js"></script>
     <script src="database.js"></script>
     <script src="3d-viewer.js"></script>
+    <script src="3d-viewer-enhanced.js"></script>
     <script src="room-calculator.js"></script>
     <script src="common-nav.js"></script>
     <script>

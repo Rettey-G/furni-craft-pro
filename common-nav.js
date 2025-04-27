@@ -1,21 +1,21 @@
 // Common Navigation Component for FurniCraft Pro
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Create navigation HTML
+    // Create navigation HTML with translation support
     const navHTML = `
     <div class="sticky-nav">
         <h1>FurniCraft Pro</h1>
         <nav class="main-nav">
             <ul>
-                <li><a href="home.html" id="nav-home"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="projects.html" id="nav-projects"><i class="fas fa-project-diagram"></i> Projects</a></li>
-                <li><a href="room-planner.html" id="nav-room-planner"><i class="fas fa-drafting-compass"></i> Room Planner</a></li>
-                <li><a href="selection.html" id="nav-selection"><i class="fas fa-chair"></i> Selection</a></li>
-                <li><a href="room-calculator.html" id="nav-room-calculator"><i class="fas fa-calculator"></i> Room Calculator</a></li>
-                <li><a href="ceiling-calculator.html" id="nav-ceiling-calculator"><i class="fas fa-th"></i> Ceiling Calculator</a></li>
-                <li><a href="2d-to-3d-v2.html" id="nav-2d-to-3d-v2"><i class="fas fa-cube"></i> 2D to 3D</a></li>
-                <li><a href="shop.html" id="nav-shop"><i class="fas fa-shopping-cart"></i> Shop</a></li>
-                <li><a href="wood-optimizer-v3.html" id="nav-wood-optimizer-v3"><i class="fas fa-cut"></i> Wood Optimizer</a></li>
+                <li><a href="home.html" id="nav-home"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a></li>
+                <li><a href="projects.html" id="nav-projects"><i class="fas fa-project-diagram"></i> <span data-i18n="projects">Projects</span></a></li>
+                <li><a href="room-planner.html" id="nav-room-planner"><i class="fas fa-drafting-compass"></i> <span data-i18n="room_planner">Room Planner</span></a></li>
+                <li><a href="selection.html" id="nav-selection"><i class="fas fa-chair"></i> <span data-i18n="selection">Selection</span></a></li>
+                <li><a href="room-calculator.html" id="nav-room-calculator"><i class="fas fa-calculator"></i> <span data-i18n="room_calculator">Room Calculator</span></a></li>
+                <li><a href="ceiling-calculator.html" id="nav-ceiling-calculator"><i class="fas fa-th"></i> <span data-i18n="ceiling_calculator">Ceiling Calculator</span></a></li>
+                <li><a href="2d-to-3d-v2.html" id="nav-2d-to-3d-v2"><i class="fas fa-cube"></i> <span data-i18n="2d_to_3d">2D to 3D</span></a></li>
+                <li><a href="shop.html" id="nav-shop"><i class="fas fa-shopping-cart"></i> <span data-i18n="shop">Shop</span></a></li>
+                <li><a href="wood-optimizer-v3.html" id="nav-wood-optimizer-v3"><i class="fas fa-cut"></i> <span data-i18n="wood_optimizer">Wood Optimizer</span></a></li>
             </ul>
         </nav>
     </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Materials Shop - FurniCraft Pro</title>
+  <title data-i18n="materials_shop">Materials Shop - FurniCraft Pro</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="improved-nav.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -272,43 +272,43 @@
   
   <div class="shop-container">
     <div class="shop-header">
-      <h2>Materials Shop</h2>
+      <h2 data-i18n="materials_shop">Materials Shop</h2>
       <div class="user-auth">
         <button id="auth-button" class="auth-button">
-          <span id="user-name">Sign In</span>
+          <span id="user-name" data-i18n="login">Sign In</span>
           <i class="fas fa-user-circle"></i>
         </button>
       </div>
     </div>
     
     <div class="search-filter">
-      <input type="text" id="search-input" placeholder="Search products...">
+      <input type="text" id="search-input" data-i18n-placeholder="search" placeholder="Search products...">
       <select id="category-filter">
-        <option value="all">All Categories</option>
-        <option value="wood">Wood</option>
-        <option value="hardware">Hardware</option>
-        <option value="tools">Tools</option>
-        <option value="fasteners">Fasteners</option>
-        <option value="paint">Paint</option>
-        <option value="safety">Safety Gear</option>
+        <option value="all" data-i18n="all_categories">All Categories</option>
+        <option value="wood" data-i18n="wood">Wood</option>
+        <option value="hardware" data-i18n="hardware">Hardware</option>
+        <option value="tools" data-i18n="tools">Tools</option>
+        <option value="fasteners" data-i18n="fasteners">Fasteners</option>
+        <option value="paint" data-i18n="paint">Paint</option>
+        <option value="safety" data-i18n="safety_gear">Safety Gear</option>
       </select>
       <select id="vendor-filter">
-        <option value="all">All Vendors</option>
+        <option value="all" data-i18n="all_vendors">All Vendors</option>
         <option value="Veligaa">Veligaa</option>
         <option value="Sonee">Sonee</option>
         <option value="Alia Hardware">Alia Hardware</option>
       </select>
       <select id="sort-filter">
-        <option value="price-low">Price: Low to High</option>
-        <option value="price-high">Price: High to Low</option>
-        <option value="name-asc">Name: A to Z</option>
-        <option value="name-desc">Name: Z to A</option>
+        <option value="price-low" data-i18n="price_low_to_high">Price: Low to High</option>
+        <option value="price-high" data-i18n="price_high_to_low">Price: High to Low</option>
+        <option value="name-asc" data-i18n="name_a_to_z">Name: A to Z</option>
+        <option value="name-desc" data-i18n="name_z_to_a">Name: Z to A</option>
       </select>
     </div>
     
     <div id="products-grid" class="products-grid">
       <!-- Products will be loaded here -->
-      <div class="no-products">Loading products...</div>
+      <div class="no-products" data-i18n="loading_products">Loading products...</div>
     </div>
   </div>
   
@@ -803,6 +803,8 @@
     // Start the initialization
     initPage();
   </script>
+  <script src="translations.js"></script>
+  <script src="language-switcher.js"></script>
   <script src="improved-nav.js"></script>
 </body>
 </html>

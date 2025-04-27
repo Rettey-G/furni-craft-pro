@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const navHTML = `
     <div class="sticky-nav">
         <h1>FurniCraft Pro</h1>
+        <div class="nav-slogan" data-i18n="slogan">Smart Design, Seamless Living</div>
         <nav class="main-nav">
             <ul>
                 <li><a href="home.html" id="nav-home"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a></li>

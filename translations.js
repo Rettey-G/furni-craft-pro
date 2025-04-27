@@ -3,6 +3,7 @@
 
 const translations = {
   en: {
+    slogan: "Smart Design, Seamless Living",
     // Navigation
     "home": "Home",
     "room_calculator": "Room Calculator",
@@ -144,6 +145,7 @@ const translations = {
     "bookshelf": "Bookshelf"
   },
   dv: {
+    slogan: "ސްމާޓް ޑިޒައިން، ހައްދަދު ޖަމިލަށް",
     // Navigation
     "home": "މައި ޞަފްޙާ",
     "room_calculator": "ކޮޓަރި ކެލްކިއުލޭޓަރ",

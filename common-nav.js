@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </li>
             </ul>
         </nav>
+        <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="main-nav-list" style="display:none">
+            <span></span>
+        </button>
     </div>
     `;
     
@@ -33,6 +36,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if (header) {
         header.innerHTML = navHTML;
     }
+    // Hamburger menu logic
+    const nav = document.querySelector('.main-nav');
+    const navList = nav.querySelector('ul');
+    navList.id = 'main-nav-list';
+    const hamburger = nav.querySelector('.hamburger');
+    function checkMobile() {
+        if (window.innerWidth <= 600) {
+            hamburger.style.display = 'block';
+            navList.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        } else {
+            hamburger.style.display = 'none';
+            navList.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+    }
+    hamburger.addEventListener('click', function() {
+        navList.classList.toggle('active');
+        const expanded = navList.classList.contains('active');
+        hamburger.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    });
+    window.addEventListener('resize', checkMobile);
+    checkMobile();
     
     // Highlight active page
     const currentPage = window.location.pathname.split('/').pop();

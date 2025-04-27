@@ -1,0 +1,19 @@
+build:
+  publish: "."
+  command: "npm run build"
+  environment:
+    NODE_VERSION: "18"
+
+plugins:
+  - package: "@netlify/plugin-sitemap"
+    config:
+      buildDir: "."
+      
+  - package: "@netlify/plugin-lighthouse"
+    config:
+      url: "https://furnicraft-pro.netlify.app"
+      
+deploy:
+  prod:
+    branch: main
+    context: production

@@ -7,8 +7,9 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "import-data": "node import-data.js",
-    "build": "echo 'No build step needed for backend'",
+    "build": "echo 'Building for Netlify deployment' && npm install",
     "deploy:render": "echo 'Deploying to Render via GitHub integration'",
+    "deploy:netlify": "echo 'Deploying to Netlify via GitHub integration'",
     "seed": "node seed-mongodb.js"
   },
   "dependencies": {

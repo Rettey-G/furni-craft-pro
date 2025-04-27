@@ -34,9 +34,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 state.selectedLocation = location;
                 goToStep('furniture');
                 loadFurnitureOptions(location);
+                autoAdvanceIfSingleOption();
             });
         }
         // Office will use the normal link navigation
+    });
+
+    // Auto-advance logic for each step
+    function autoAdvanceIfSingleOption() {
+        // Furniture step
+        const furnitureList = furnitureData[state.selectedLocation] || [];
+        if (furnitureList.length === 1) {
+            state.selectedFurniture = furnitureList[0].id;
+            goToStep('size');
+            loadSizeOptions(state.selectedFurniture);
+            setTimeout(() => autoAdvanceIfSingleSize(), 50);
+        }
+    }
+    function autoAdvanceIfSingleSize() {
+        const sizes = sizeData[state.selectedFurniture] || [];
+        if (sizes.length === 1) {
+            state.selectedSize = sizes[0].id;
+            goToStep('materials');
+            loadMaterialOptions();
+            setTimeout(() => autoAdvanceIfSingleMaterial(), 50);
+        }
+    }
+    function autoAdvanceIfSingleMaterial() {
+        const primary = materialData.primary || [];
+        const finish = materialData.finish || [];
+        const hardware = materialData.hardware || [];
+        if (primary.length === 1 && finish.length === 1 && hardware.length === 1) {
+            state.selectedMaterials.primary = primary[0].id;
+            state.selectedMaterials.finish = finish[0].id;
+            state.selectedMaterials.hardware = hardware[0].id;
+            goToStep('summary');
+            updateSummary();
+            initPreview();
+        }
+    }
+
+    // Also auto-advance on furniture and size select
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.furniture-card')) {
+            setTimeout(() => autoAdvanceIfSingleSize(), 50);
+        }
+        if (e.target.closest('.size-option')) {
+            setTimeout(() => autoAdvanceIfSingleMaterial(), 50);
+        }
     });
     
     // Furniture Section

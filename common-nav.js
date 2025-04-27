@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create navigation HTML with translation support
     const navHTML = `
     <div class="sticky-nav">
-        <h1>FurniCraft Pro</h1>
-        <div class="nav-slogan" data-i18n="slogan">Smart Design, Seamless Living</div>
         <nav class="main-nav">
             <ul>
                 <li><a href="home.html" id="nav-home"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a></li>
@@ -28,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="main-nav-list" style="display:none">
             <span></span>
         </button>
+        <h1 style="margin-top:18px;">FurniCraft Pro</h1>
+        <div class="nav-slogan" data-i18n="slogan">Smart Design, Seamless Living</div>
     </div>
     `;
     
